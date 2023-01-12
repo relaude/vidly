@@ -9,30 +9,31 @@ using Vidly.Web.Models;
 
 namespace Vidly.Web.Repositories
 {
-    public class GenreRepository : GenericRepository<Genre>
+    public class GenreRepository
     {
-        private readonly ApplicationDbContext _db;
-        public GenreRepository(ApplicationDbContext context) : base(context)
+        private readonly VidlyDBContext _db;
+        public GenreRepository()
         {
-            _db = context;
+            _db = new VidlyDBContext();
         }
 
-        public async Task<IEnumerable<GenreDto>> Genres()
+        public IEnumerable<GenreDto> Genres()
         {
-            var genreDb = await GetAll();
+            var genreDb = _db.Genres.ToList();
             return genreDb.Select(Mapper.Map<Genre, GenreDto>);
         }
 
         public async Task<GenreDto> Genre(int id)
         {
-            Genre genre = await Get(id);
+            Genre genre = await _db.Genres.FindAsync(id);
             return Mapper.Map<Genre, GenreDto>(genre);
         }
 
         public async Task<GenreDto> CreateGenre(GenreDto genreDto)
         {
             var genre = Mapper.Map<GenreDto, Genre>(genreDto);
-            Add(genre);
+
+            _db.Set<Genre>().Add(genre);
             await _db.SaveChangesAsync();
 
             return Mapper.Map<Genre, GenreDto>(genre);
@@ -40,7 +41,7 @@ namespace Vidly.Web.Repositories
 
         public async Task UpdateGenre(GenreDto genreDto)
         {
-            var genreDb = await Get(genreDto.Id);
+            var genreDb = await _db.Genres.FindAsync(genreDto.Id);
             Mapper.Map(genreDto, genreDb);
 
             await _db.SaveChangesAsync();
@@ -48,8 +49,8 @@ namespace Vidly.Web.Repositories
 
         public async Task DeleteGenre(int id)
         {
-            var genreDb = await Get(id);
-            Remove(genreDb);
+            var genreDb = await _db.Genres.FindAsync(id);
+            _db.Set<Genre>().Remove(genreDb);
 
             await _db.SaveChangesAsync();
         }

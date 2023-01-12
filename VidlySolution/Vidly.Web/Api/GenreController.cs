@@ -11,18 +11,19 @@ using Vidly.Web.Repositories;
 
 namespace Vidly.Web.Api
 {
+    [Authorize(Roles="Admin")]
     public class GenreController : ApiController
     {
         private readonly GenreRepository _genreRepository;
         public GenreController()
         {
-            _genreRepository = new GenreRepository(new ApplicationDbContext());
+            _genreRepository = new GenreRepository();
         }
 
         [HttpGet]
         public async Task<IEnumerable<GenreDto>> GetGenres()
         {
-            return await _genreRepository.Genres();
+            return await Task.Run(()=> _genreRepository.Genres());
         }
 
         [HttpGet]

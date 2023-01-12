@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [dbo].[MembershipTypes] (
-    [Id]               TINYINT        NOT NULL,
+    [Id]               TINYINT        NOT NULL IDENTITY,
     [SignUpFee]        SMALLINT       NOT NULL,
     [DurationInMonths] TINYINT        NOT NULL,
     [DiscountRate]     TINYINT        NOT NULL,
