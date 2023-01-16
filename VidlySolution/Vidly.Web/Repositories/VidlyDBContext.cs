@@ -16,9 +16,9 @@ namespace Vidly.Web.Repositories
         }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Movie> Movies { get; set; }
-        public DbSet<MembershipType> MembershipTypes { get; set; }
+        public DbSet<Membership> Memberships { get; set; }
         public DbSet<Genre> Genres { get; set; }
-        public DbSet<Rental> Rentals { get; set; }
+        public DbSet<CustomerRental> CustomerRentals { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

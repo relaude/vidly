@@ -6,21 +6,15 @@ using System.Web;
 
 namespace Vidly.Web.Dtos
 {
-    public class MovieDto
+    public class MembershipDto
     {
         public int Id { get; set; }
 
         [Required]
-        [StringLength(200)]
+        [StringLength(50)]
         public string Name { get; set; }
 
         [Required]
-        public int Genre_Id { get; set; }
-
-        [Required]
-        public decimal RentFee { get; set; }
-
-        [Required]
-        public int Stock { get; set; }
+        public decimal DiscountRate { get; set; }
     }
 }

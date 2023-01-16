@@ -1,26 +1,22 @@
-﻿
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Web;
 
 namespace Vidly.Web.Models
 {
-    public class Movie
+    public class Membership
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         [Required]
-        [StringLength(200)]
+        [StringLength(50)]
         public string Name { get; set; }
 
         [Required]
-        public int Genre_Id { get; set; }
-
-        [Required]
-        public decimal RentFee { get; set; }
-
-        [Required]
-        public int Stock { get; set; }
+        public decimal DiscountRate { get; set; }
     }
 }
