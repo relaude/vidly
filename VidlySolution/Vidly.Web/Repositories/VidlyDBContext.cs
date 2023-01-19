@@ -21,7 +21,8 @@ namespace Vidly.Web.Repositories
         public DbSet<CustomerRental> CustomerRentals { get; set; }
         public DbSet<Rental> Rentals { get; set; }
 
-        public DbSet<ViewMovie> ViewMovie { get; set; }
+        public DbSet<ViewMovie> ViewMovies { get; set; }
+        public DbSet<ViewCustomer> ViewCustomers { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -88,7 +89,9 @@ namespace Vidly.Web.Repositories
 
             modelBuilder.Entity<Membership>()
                 .Property(i => i.DiscountRate)
-                .IsRequired();
+                .IsRequired()
+                .HasColumnType("decimal")
+                .HasPrecision(18, 2);
 
             //Configure Column Genre
             modelBuilder.Entity<Genre>()
@@ -125,6 +128,7 @@ namespace Vidly.Web.Repositories
 
             //VIEWS
             modelBuilder.Entity<ViewMovie>().ToTable("ViewMovies");
+            modelBuilder.Entity<ViewCustomer>().ToTable("ViewCustomers");
         }
     }
 }

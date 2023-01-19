@@ -21,7 +21,8 @@ namespace Vidly.Web.Api
         [HttpGet]
         public async Task<IEnumerable<MembershipDto>> GetMemberships()
         {
-            return await _membershipRepository.GetListAsync();
+            var result = await _membershipRepository.GetListAsync();
+            return result.OrderBy(i => i.Name);
         }
 
         [HttpGet]

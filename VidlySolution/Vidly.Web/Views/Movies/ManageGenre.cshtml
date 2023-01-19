@@ -48,7 +48,6 @@
                             headers: { "Content-Type": "application/json" },
                             data: JSON.stringify({ "Name": result }),
                             success: function (response) {
-                                console.log(response);
                                 dataTable.ajax.reload();
                             }
                         });

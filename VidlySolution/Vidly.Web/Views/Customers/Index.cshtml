@@ -1,7 +1,212 @@
 ﻿
 @{
-    ViewBag.Title = "Customers | Vidly";
+    ViewBag.Title = "Manage Customers";
 }
 
-<h2>Customers</h2>
+<h2>Manage Customers</h2>
 
+<table id="customers" class="table">
+    <thead>
+        <tr>
+            <th>Last Name</th>
+            <th>First Name</th>
+            <th><a href="/customers/managemembership">Membership</a></th>
+            <th><button class="btn-link" id="customer-add">Add Customer</button></th>
+        </tr>
+    </thead>
+</table>
+
+<!-- Add Modal -->
+<div class="modal fade" id="customer-add-modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Customer Form</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label>Last Name</label>
+                        <input type="text" class="form-control" id="customer-add-lastname">
+                    </div>
+                    <div class="form-group">
+                        <label>First Name</label>
+                        <input type="text" class="form-control" id="customer-add-firstname">
+                    </div>
+                    <div class="form-group">
+                        <label>Birthday</label>
+                        <input type="date" class="form-control" id="customer-add-dateofbirth">
+                    </div>
+                    <div class="form-group">
+                        <label>Membership</label>
+                        <select class="form-control custom-select" id="customer-add-membership"></select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="customer-add-submit">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal fade" id="customer-edit-modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Customer Form</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label>Last Name</label>
+                        <input type="hidden" id="customer-edit-id"  />
+                        <input type="text" class="form-control" id="customer-edit-lastname">
+                    </div>
+                    <div class="form-group">
+                        <label>First Name</label>
+                        <input type="text" class="form-control" id="customer-edit-firstname">
+                    </div>
+                    <div class="form-group">
+                        <label>Birthday</label>
+                        <input type="date" class="form-control" id="customer-edit-dateofbirth">
+                    </div>
+                    <div class="form-group">
+                        <label>Membership</label>
+                        <select class="form-control custom-select" id="customer-edit-membership"></select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="customer-edit-submit">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+
+            function populateSelectMembership(list) {
+                var options = "";
+                $.each(list, function (i, item) {
+                    options += "<option value='" + item.id + "'>" + item.name + "</option>";
+                });
+
+                $("#customer-add-membership").html(options);
+                $("#customer-edit-membership").html(options);
+            }
+
+            var dataTable = $('#customers').DataTable({
+                ajax: {
+                    url: "/api/customer",
+                    dataSrc: ""
+                },
+                columns: [
+                    { data: "lastName" },
+                    { data: "firstName" },
+                    { data: "membership" },
+                    {
+                        data: "id",
+                        render: function (data) {
+                            return "<button class='btn-link js-edit' data-customer-id=" + data + ">Edit</button> | <button class='btn-link js-delete' data-customer-id=" + data + ">Delete</button>";
+                        }
+                    }
+                ]
+            });
+
+            $.ajax({
+                url: "/api/membership/",
+                method: "GET",
+                success: function (response) {
+                    populateSelectMembership(response)
+                }
+            });
+
+            //Add
+            $("#customer-add").on("click", function () {
+
+                $('#customer-add-modal').modal('show');
+            });
+
+            $("#customer-add-submit").on("click", function () {
+                var newCustomer = {
+                    FirstName: $("#customer-add-firstname").val(),
+                    LastName: $("#customer-add-lastname").val(),
+                    DateOfBirth: $("#customer-add-dateofbirth").val(),
+                    Membership_Id: $("#customer-add-membership").val()
+                };
+
+                $.ajax({
+                    url: "/api/customer/",
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    data: JSON.stringify(newCustomer),
+                    success: function (response) {
+                        $("#customer-add-modal").modal('toggle');
+                        dataTable.ajax.reload();
+                    }
+                });
+            });
+
+            //Edit
+            $("#customers").on("click", ".js-edit", function () {
+                var button = $(this);
+                var rowData = dataTable.row(button.parents("tr")).data();
+
+                $("#customer-edit-id").val(rowData.id);
+                $("#customer-edit-firstname").val(rowData.firstName);
+                $("#customer-edit-lastname").val(rowData.lastName);
+                $("#customer-edit-dateofbirth").val(rowData.dateOfBirth);
+                $("#customer-edit-membership").val(rowData.membershipId);
+
+                $('#customer-edit-modal').modal('show');
+            });
+
+            $("#customer-edit-submit").on("click", function () {
+                var newCustomer = {
+                    Id: $("#customer-edit-id").val(),
+                    FirstName: $("#customer-edit-firstname").val(),
+                    LastName: $("#customer-edit-lastname").val(),
+                    DateOfBirth: $("#customer-edit-dateofbirth").val(),
+                    Membership_Id: $("#customer-edit-membership").val()
+                };
+
+                $.ajax({
+                    url: "/api/customer/" + newCustomer.Id,
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    data: JSON.stringify(newCustomer),
+                    success: function (response) {
+                        $("#customer-edit-modal").modal('toggle');
+                        dataTable.ajax.reload();
+                    }
+                });
+            });
+
+            //Delete
+            $("#customers").on("click", ".js-delete", function () {
+                var button = $(this);
+
+                bootbox.confirm("Are you sure?", function (result) {
+                    if (result) {
+                        $.ajax({
+                            url: "/api/customer/" + button.attr("data-customer-id"),
+                            method: "DELETE",
+                            success: function () {
+                                dataTable.row(button.parents("tr")).remove().draw();
+                            }
+                        });
+                    }
+                });
+            });
+
+
+        });
+    </script>
+}

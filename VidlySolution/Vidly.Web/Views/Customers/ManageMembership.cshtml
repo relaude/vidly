@@ -1,0 +1,172 @@
+﻿
+@{
+    ViewBag.Title = "Manage Membership";
+}
+
+<h2>Manage Membership</h2>
+
+<table id="memberships" class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Discount Rate</th>
+            <th><button class="btn-link" id="membership-add">Add Membership</button></th>
+        </tr>
+    </thead>
+</table>
+
+<!-- Add Modal -->
+<div class="modal fade" id="membership-add-modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Membership Form</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" class="form-control" id="membership-add-name">
+                    </div>
+                    <div class="form-group">
+                        <label>Discount Rate</label>
+                        <input type="number" class="form-control" id="membership-add-discountrate">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="membership-add-submit">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal fade" id="membership-edit-modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Membership Form</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="hidden" id="membership-edit-id" />
+                        <input type="text" class="form-control" id="membership-edit-name">
+                    </div>
+                    <div class="form-group">
+                        <label>Rent Fee</label>
+                        <input type="number" class="form-control" id="membership-edit-discountrate">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="membership-edit-submit">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+
+
+            var dataTable = $('#memberships').DataTable({
+                ajax: {
+                    url: "/api/membership",
+                    dataSrc: ""
+                },
+                columns: [
+                    { data: "name" },
+                    { data: "discountRate" },
+                    {
+                        data: "id",
+                        render: function (data) {
+                            return "<button class='btn-link js-edit' data-membership-id=" + data + ">Edit</button> | <button class='btn-link js-delete' data-membership-id=" + data + ">Delete</button>";
+                        }
+                    }
+                ]
+            });
+
+            //Add
+            $("#membership-add").on("click", function () {
+
+                $('#membership-add-modal').modal('show');
+            });
+
+            $("#membership-add-submit").on("click", function () {
+                var newMembership = {
+                    Name: $("#membership-add-name").val(),
+                    DiscountRate: $("#membership-add-discountrate").val().toString()
+                };
+
+                $.ajax({
+                    url: "/api/membership/",
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    data: JSON.stringify(newMembership),
+                    success: function (response) {
+                        $("#membership-add-modal").modal('toggle');
+                        dataTable.ajax.reload();
+                    }
+                });
+            });
+
+            //Edit
+            $("#memberships").on("click", ".js-edit", function () {
+                var button = $(this);
+                var rowData = dataTable.row(button.parents("tr")).data();
+
+                $("#membership-edit-id").val(rowData.id);
+                $("#membership-edit-name").val(rowData.name);
+                $("#membership-edit-discountrate").val(rowData.discountRate);
+
+                $('#membership-edit-modal').modal('show');
+            });
+
+            $("#membership-edit-submit").on("click", function () {
+                var newMembership = {
+                    Id: $("#membership-edit-id").val(),
+                    Name: $("#membership-edit-name").val(),
+                    DiscountRate: $("#membership-edit-discountrate").val().toString()
+                };
+
+                $.ajax({
+                    url: "/api/membership/" + newMembership.Id,
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    data: JSON.stringify(newMembership),
+                    success: function (response) {
+                        $("#membership-edit-modal").modal('toggle');
+                        dataTable.ajax.reload();
+                    }
+                });
+            });
+
+            //Delete
+            $("#memberships").on("click", ".js-delete", function () {
+                var button = $(this);
+
+                bootbox.confirm("Are you sure?", function (result) {
+                    if (result) {
+                        $.ajax({
+                            url: "/api/membership/" + button.attr("data-membership-id"),
+                            method: "DELETE",
+                            success: function () {
+                                dataTable.row(button.parents("tr")).remove().draw();
+                            }
+                        });
+                    }
+                });
+            });
+
+
+        });
+    </script>
+}
+

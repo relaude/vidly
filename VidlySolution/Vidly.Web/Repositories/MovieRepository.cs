@@ -21,7 +21,7 @@ namespace Vidly.Web.Repositories
 
         public async Task<IEnumerable<ViewMovie>> GetViewMovies()
         {
-            return await _db.ViewMovie.ToListAsync();
+            return await _db.ViewMovies.ToListAsync();
         }
     }
 }

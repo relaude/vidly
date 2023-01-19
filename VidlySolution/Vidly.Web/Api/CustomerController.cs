@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Vidly.Web.Dtos;
+using Vidly.Web.Models;
 using Vidly.Web.Repositories;
 
 namespace Vidly.Web.Api
@@ -19,9 +20,10 @@ namespace Vidly.Web.Api
         }
 
         [HttpGet]
-        public async Task<IEnumerable<CustomerDto>> GetCustomers()
+        public async Task<IEnumerable<ViewCustomer>> GetCustomers()
         {
-            return await _customerRepository.GetListAsync();
+            var result = await _customerRepository.GetViewCustomers();
+            return result.OrderBy(i => i.LastName).ToList();
         }
 
         [HttpGet]

@@ -10,10 +10,7 @@ namespace Vidly.Web.Models
         public int Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-
-        [Min18YearsIfAMember]
         public DateTime DateOfBirth { get; set; }
-
         public int Membership_Id { get; set; }
     }
 }

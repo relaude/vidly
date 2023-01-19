@@ -11,20 +11,18 @@ namespace Vidly.Web.Controllers
     [Authorize(Roles ="Admin")]
     public class MoviesController : Controller
     {
-        private readonly GenreRepository _genreRepository;
         public MoviesController()
         {
-            _genreRepository = new GenreRepository(new VidlyDBContext());
+
         }
         public ActionResult Index()
         {
             return View();
         }
 
-        public async Task<ActionResult> ManageGenre() 
+        public ActionResult ManageGenre() 
         {
-            var model = await _genreRepository.GetListAsync();
-            return View(model);
+            return View();
         }
     }
 }
