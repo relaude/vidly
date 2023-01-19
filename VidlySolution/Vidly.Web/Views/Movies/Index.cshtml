@@ -1,7 +1,216 @@
 ﻿
 @{
-    ViewBag.Title = "Movies | Vidly";
+    ViewBag.Title = "Manage Movies";
 }
 
-<h2>Movies</h2>
+<h2>Manage Movies</h2>
 
+<table id="movies" class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th><a href="/movies/managegenre">Genre</a></th>
+            <th>Rent Fee</th>
+            <th>Stock</th>
+            <th><button class="btn-link" id="movie-add">Add Movie</button></th>
+        </tr>
+    </thead>
+</table>
+
+<!-- Add Modal -->
+<div class="modal fade" id="movie-add-modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Movie Form</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" class="form-control" id="movie-add-name">
+                    </div>
+                    <div class="form-group">
+                        <label>Genre</label>
+                        <select class="form-control custom-select" id="movie-add-genre"></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Rent Fee</label>
+                        <input type="number" class="form-control" id="movie-add-rentfee">
+                    </div>
+                    <div class="form-group">
+                        <label>Stock</label>
+                        <input type="number" class="form-control" id="movie-add-stock">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="movie-add-submit">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal fade" id="movie-edit-modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Movie Form</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="hidden" id="movie-edit-id" />
+                        <input type="text" class="form-control" id="movie-edit-name">
+                    </div>
+                    <div class="form-group">
+                        <label>Genre</label>
+                        <select class="form-control custom-select" id="movie-edit-genre"></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Rent Fee</label>
+                        <input type="number" class="form-control" id="movie-edit-rentfee">
+                    </div>
+                    <div class="form-group">
+                        <label>Stock</label>
+                        <input type="number" class="form-control" id="movie-edit-stock">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="movie-edit-submit">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+
+            function populateSelectGenre(list) {
+                var options = "";
+                $.each(list, function (i, item) {
+                    options += "<option value='" + item.id + "'>" + item.name + "</option>";
+                });
+
+                $("#movie-add-genre").html(options);
+                $("#movie-edit-genre").html(options);
+            }
+
+            $.ajax({
+                url: "/api/genre/",
+                method: "GET",
+                success: function (response) {
+                    populateSelectGenre(response)
+                }
+            });
+
+            var dataTable = $('#movies').DataTable({
+                ajax: {
+                    url: "/api/movie",
+                    dataSrc: ""
+                },
+                columns: [
+                    { data: "movie" },
+                    { data: "genre" },
+                    { data: "rentFee" },
+                    { data: "stock" },
+                    {
+                        data: "id",
+                        render: function (data) {
+                            return "<button class='btn-link js-edit' data-movie-id=" + data + ">Edit</button> | <button class='btn-link js-delete' data-movie-id=" + data + ">Delete</button>";
+                        }
+                    }
+                ]
+            });
+
+
+            //Add
+            $("#movie-add").on("click", function () {
+
+                $('#movie-add-modal').modal('show');
+            });
+
+            $("#movie-add-submit").on("click", function () {
+                var newMovie = {
+                    Name: $("#movie-add-name").val(),
+                    Genre_Id: $("#movie-add-genre").val(),
+                    RentFee: $("#movie-add-rentfee").val().toString(),
+                    Stock: $("#movie-add-stock").val()
+                };
+
+                $.ajax({
+                    url: "/api/movie/",
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    data: JSON.stringify(newMovie),
+                    success: function (response) {
+                        $("#movie-add-modal").modal('toggle');
+                        dataTable.ajax.reload();
+                    }
+                });
+            });
+
+            //Edit
+            $("#movies").on("click", ".js-edit", function () {
+                var button = $(this);
+                var rowData = dataTable.row(button.parents("tr")).data();
+
+                $("#movie-edit-id").val(rowData.id);
+                $("#movie-edit-name").val(rowData.movie);
+                $("#movie-edit-genre").val(rowData.genreId);
+                $("#movie-edit-rentfee").val(rowData.rentFee);
+                $("#movie-edit-stock").val(rowData.stock);
+
+                $('#movie-edit-modal').modal('show');
+            });
+
+            $("#movie-edit-submit").on("click", function () {
+                var newMovie = {
+                    Id: $("#movie-edit-id").val(),
+                    Name: $("#movie-edit-name").val(),
+                    Genre_Id: $("#movie-edit-genre").val(),
+                    RentFee: $("#movie-edit-rentfee").val().toString(),
+                    Stock: $("#movie-edit-stock").val()
+                };
+
+                $.ajax({
+                    url: "/api/movie/" + newMovie.Id,
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    data: JSON.stringify(newMovie),
+                    success: function (response) {
+                        $("#movie-edit-modal").modal('toggle');
+                        dataTable.ajax.reload();
+                    }
+                });
+            });
+
+            //Delete
+            $("#movies").on("click", ".js-delete", function () {
+                var button = $(this);
+
+                bootbox.confirm("Are you sure?", function (result) {
+                    if (result) {
+                        $.ajax({
+                            url: "/api/movie/" + button.attr("data-movie-id"),
+                            method: "DELETE",
+                            success: function () {
+                                dataTable.row(button.parents("tr")).remove().draw();
+                            }
+                        });
+                    }
+                });
+            });
+
+        });
+    </script>
+}

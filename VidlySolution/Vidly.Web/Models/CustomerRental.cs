@@ -9,19 +9,10 @@ namespace Vidly.Web.Models
 {
     public class CustomerRental
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-
-        [Required]
-        public int Customer_Id { get; set; }
-
-        [Required]
+        public int Rental_Id { get; set; }
         public int Movie_Id { get; set; }
-
-        [Required]
         public decimal RentFee { get; set; }
-
-        [Required]
         public DateTime DateRented { get; set; }
         public DateTime? DateReturned { get; set; }
     }

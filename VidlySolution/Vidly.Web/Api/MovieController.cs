@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Vidly.Web.Dtos;
+using Vidly.Web.Models;
 using Vidly.Web.Repositories;
 
 namespace Vidly.Web.Api
@@ -19,9 +20,10 @@ namespace Vidly.Web.Api
         }
 
         [HttpGet]
-        public async Task<IEnumerable<MovieDto>> GetMovies()
+        public async Task<IEnumerable<ViewMovie>> GetMovies()
         {
-            return await _movieRepository.GetListAsync();
+            var result = await _movieRepository.GetViewMovies();
+            return result.OrderBy(i=>i.Movie);
         }
 
         [HttpGet]

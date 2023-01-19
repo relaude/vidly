@@ -23,7 +23,8 @@ namespace Vidly.Web.Api
         [HttpGet]
         public async Task<IEnumerable<GenreDto>> GetGenres()
         {
-            return await _genreRepository.GetListAsync();
+            var result = await _genreRepository.GetListAsync();
+            return result.OrderBy(i=>i.Name).ToList();
         }
 
         [HttpGet]
@@ -45,16 +46,16 @@ namespace Vidly.Web.Api
 
             var result = await _genreRepository.CreateAsync(dto);
 
-            return Created(new Uri($"{Request.RequestUri}/getgenre/{result.Id}"), result);
+            return Created(new Uri($"{Request.RequestUri}/{result.Id}"), result);
         }
 
         [HttpPut]
-        public async Task<IHttpActionResult> UpdateGenre(GenreDto dto)
+        public async Task<IHttpActionResult> UpdateGenre(int id, GenreDto dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest();
 
-            await _genreRepository.UpdateAsync(dto, dto.Id);
+            await _genreRepository.UpdateAsync(dto, id);
 
             return Ok();
         }

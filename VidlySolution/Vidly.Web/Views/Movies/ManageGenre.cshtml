@@ -1,0 +1,108 @@
+﻿@model IEnumerable<Vidly.Web.Dtos.GenreDto>
+
+@{
+    ViewBag.Title = "Manage Genre";
+}
+
+<h2>Manage Genre</h2>
+
+<table id="genres" class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th><button class="btn-link" id="genre-add">Add Genre</button></th>
+        </tr>
+    </thead>
+</table>
+
+
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+
+
+            var dataTable = $('#genres').DataTable({
+                ajax: {
+                    url: "/api/genre",
+                    dataSrc: ""
+                },
+                columns: [
+                    { data: "name" },
+                    {
+                        data: "id",
+                        render: function (data) {
+                            return "<button class='btn-link js-edit' data-genre-id=" + data + ">Edit</button> | <button class='btn-link js-delete' data-genre-id=" + data + ">Delete</button>";
+                        }
+                    }
+                ]
+            });
+
+            $("#genre-add").on("click", function () {
+                bootbox.prompt('New Genre', function (result) {
+                    if (result) {
+                        $.ajax({
+                            url: "/api/genre/",
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            data: JSON.stringify({ "Name": result }),
+                            success: function (response) {
+                                console.log(response);
+                                dataTable.ajax.reload();
+                            }
+                        });
+                    }
+                });
+            });
+
+            $("#genres").on("click", ".js-edit", function () {
+                var button = $(this);
+                var rowData = dataTable.row(button.parents("tr")).data();
+
+                bootbox.prompt({
+                    title: "Update Genre",
+                    inputType: 'text',
+                    value: rowData.name,
+                    required: true,
+                    minlength: 3,
+                    callback: function (result) {
+
+                        if (result) {
+                            rowData.name = result;
+                            $.ajax({
+                                url: "/api/genre/" + rowData.id,
+                                method: "PUT",
+                                headers: { "Content-Type": "application/json" },
+                                data: JSON.stringify(rowData),
+                                success: function (response) {
+                                    console.log(response);
+                                    dataTable.ajax.reload();
+                                }
+                            });
+                        }
+
+                    }
+                });
+
+            });
+
+            $("#genres").on("click", ".js-delete", function () {
+                var button = $(this);
+
+                bootbox.confirm("Are you sure?", function (result) {
+                    if (result) {
+                        $.ajax({
+                            url: "/api/genre/" + button.attr("data-genre-id"),
+                            method: "DELETE",
+                            success: function () {
+                                dataTable.row(button.parents("tr")).remove().draw();
+                            }
+                        });
+                    }
+                });
+            });
+            
+        });
+    </script>
+}

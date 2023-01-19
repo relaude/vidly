@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -16,6 +17,11 @@ namespace Vidly.Web.Repositories
         public MovieRepository(VidlyDBContext context) : base(context)
         {
             _db = context;
+        }
+
+        public async Task<IEnumerable<ViewMovie>> GetViewMovies()
+        {
+            return await _db.ViewMovie.ToListAsync();
         }
     }
 }

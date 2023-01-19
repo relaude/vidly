@@ -20,6 +20,7 @@ namespace Vidly.Web.Dtos
         public string LastName { get; set; }
 
         [Required]
+        [Min18YearsIfAMember]
         public DateTime DateOfBirth { get; set; }
 
 

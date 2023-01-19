@@ -19,13 +19,112 @@ namespace Vidly.Web.Repositories
         public DbSet<Membership> Memberships { get; set; }
         public DbSet<Genre> Genres { get; set; }
         public DbSet<CustomerRental> CustomerRentals { get; set; }
+        public DbSet<Rental> Rentals { get; set; }
+
+        public DbSet<ViewMovie> ViewMovie { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Genre>()
-                .Property(g => g.Name)
+            //Map entity to table
+            modelBuilder.Entity<Customer>().ToTable("Customers");
+            modelBuilder.Entity<Movie>().ToTable("Movies");
+            modelBuilder.Entity<Membership>().ToTable("Memberships");
+            modelBuilder.Entity<Genre>().ToTable("Genres");
+            modelBuilder.Entity<CustomerRental>().ToTable("CustomerRentals");
+            modelBuilder.Entity<Rental>().ToTable("Rentals");
+
+            //Configure primary key
+            modelBuilder.Entity<Customer>().HasKey<int>(i => i.Id).HasTableAnnotation("DatabaseGenerated", DatabaseGeneratedOption.Identity);
+            modelBuilder.Entity<Movie>().HasKey<int>(i => i.Id).HasTableAnnotation("DatabaseGenerated", DatabaseGeneratedOption.Identity);
+            modelBuilder.Entity<Membership>().HasKey<int>(i => i.Id).HasTableAnnotation("DatabaseGenerated", DatabaseGeneratedOption.Identity);
+            modelBuilder.Entity<Genre>().HasKey<int>(i => i.Id).HasTableAnnotation("DatabaseGenerated", DatabaseGeneratedOption.Identity);
+            modelBuilder.Entity<CustomerRental>().HasKey<int>(i => i.Id).HasTableAnnotation("DatabaseGenerated", DatabaseGeneratedOption.Identity);
+            modelBuilder.Entity<Rental>().HasKey<int>(i => i.Id).HasTableAnnotation("DatabaseGenerated", DatabaseGeneratedOption.Identity);
+
+            //Configure Column Customer
+            modelBuilder.Entity<Customer>()
+                .Property(i => i.FirstName)
+                .IsRequired()
+                .HasMaxLength(200);
+
+            modelBuilder.Entity<Customer>()
+                .Property(i => i.LastName)
+                .IsRequired()
+                .HasMaxLength(200);
+
+            modelBuilder.Entity<Customer>()
+                .Property(i => i.DateOfBirth)
+                .IsRequired();
+
+            modelBuilder.Entity<Customer>()
+                .Property(i => i.Membership_Id)
+                .IsRequired();
+
+            //Configure Column Movie
+            modelBuilder.Entity<Movie>()
+                .Property(i => i.Name)
                 .IsRequired()
                 .HasMaxLength(50);
+
+            modelBuilder.Entity<Movie>()
+                .Property(i => i.Genre_Id)
+                .IsRequired();
+
+            modelBuilder.Entity<Movie>()
+                .Property(i => i.RentFee)
+                .IsRequired()
+                .HasColumnType("decimal")
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<Movie>()
+                .Property(i => i.Stock)
+                .IsRequired();
+
+            //Configure Column Membership
+            modelBuilder.Entity<Membership>()
+                .Property(i => i.Name)
+                .IsRequired()
+                .HasMaxLength(50);
+
+            modelBuilder.Entity<Membership>()
+                .Property(i => i.DiscountRate)
+                .IsRequired();
+
+            //Configure Column Genre
+            modelBuilder.Entity<Genre>()
+                .Property(i => i.Name)
+                .IsRequired()
+                .HasMaxLength(50);
+
+            //Configure Column CustomerRental
+            modelBuilder.Entity<CustomerRental>()
+                .Property(i => i.Rental_Id)
+                .IsRequired();
+
+            modelBuilder.Entity<CustomerRental>()
+               .Property(i => i.Movie_Id)
+               .IsRequired();
+
+            modelBuilder.Entity<CustomerRental>()
+               .Property(i => i.RentFee)
+               .IsRequired();
+
+            modelBuilder.Entity<CustomerRental>()
+               .Property(i => i.DateRented)
+               .IsRequired();
+
+            //Configure Column Rental
+            modelBuilder.Entity<Rental>()
+                .Property(i => i.Customer_Id)
+                .IsRequired();
+
+            //Configure Null Column
+            modelBuilder.Entity<CustomerRental>()
+               .Property(i => i.DateRented)
+               .IsOptional();
+
+            //VIEWS
+            modelBuilder.Entity<ViewMovie>().ToTable("ViewMovies");
         }
     }
 }
