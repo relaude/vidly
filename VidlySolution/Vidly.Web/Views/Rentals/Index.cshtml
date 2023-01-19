@@ -5,3 +5,149 @@
 
 <h2>Rentals</h2>
 
+<table id="rentals" class="table">
+    <thead>
+        <tr>
+            <th>Customer</th>
+            <th>Pending For Return</th>
+            <th><button class="btn-link" id="rental-add">Add Rental</button></th>
+        </tr>
+    </thead>
+</table>
+
+<!-- Add Modal -->
+<div class="modal fade" id="rental-add-modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Rental Form</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label>Customer</label>
+                        <div class="tt-container">
+                            <input type="text" class="form-control" id="rental-add-customer">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Movies</label>
+                        <div class="tt-container">
+                            <input type="text" class="form-control" id="rental-add-movie">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <ul id="rental-add-movielist" class="list-group"></ul>
+                        </div>
+                    </div>
+                    
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="rental-add-submit">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+
+            var vmCustomer = {
+                CustomerId: 0,
+                MovieIds: []
+            };
+            var vmMovie = {};
+
+            //Customers TypeAhead
+            var customersTypeAhead = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.obj.whitespace('displayName'),
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                remote: {
+                    url: '/api/customer?query=%QUERY',
+                    wildcard: '%QUERY'
+                }
+            });
+
+            $('#rental-add-customer').typeahead({
+                minLength: 3, highlight: true
+            }, {
+                name: 'customers',
+                display: 'displayName',
+                source: customersTypeAhead
+            }).on("typeahead:select", function (e, customer) {
+                vmCustomer.CustomerId = customer.id;
+            });
+
+            //Movies TypeAhead
+            var moviesTypeAhead = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.obj.whitespace('movie'),
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                remote: {
+                    url: '/api/movie?query=%QUERY',
+                    wildcard: '%QUERY'
+                }
+            });
+
+            $('#rental-add-movie').typeahead({
+                minLength: 3, highlight: true
+            }, {
+                name: 'movie',
+                display: 'movie',
+                source: moviesTypeAhead
+            }).on("typeahead:select", function (e, movie) {
+                $("#rental-add-movielist").append("<li class='list-group-item'>" + movie.movie + "</li>");
+                $("#rental-add-movielist").typeahead("val", "");
+
+                vmCustomer.MovieIds.push(movie.id);
+            });
+
+            //Table
+            var dataTable = $('#rentals').DataTable({
+                ajax: {
+                    url: "/api/rental",
+                    dataSrc: ""
+                },
+                columns: [
+                    { data: "customer" },
+                    { data: "pending" },
+                    {
+                        data: "id",
+                        render: function (data) {
+                            return "<a href='/rentals/details/"
+                                + data + "'>Details</a> | <button class='btn-link js-edit' data-rental-id="
+                                + data + ">Edit</button> | <button class='btn-link js-delete' data-rental-id="
+                                + data + ">Delete</button>";
+                        }
+                    }
+                ]
+            });
+
+            //Add
+            $("#rental-add").on("click", function () {
+
+                $('#rental-add-modal').modal('show');
+            });
+
+            $("#rental-add-submit").on("click", function () {
+
+                $.ajax({
+                    url: "/api/rental/",
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    data: JSON.stringify(vmCustomer),
+                    success: function (response) {
+                        $("#rental-add-modal").modal('toggle');
+                        dataTable.ajax.reload();
+                    }
+                });
+            });
+
+        });
+    </script>
+}

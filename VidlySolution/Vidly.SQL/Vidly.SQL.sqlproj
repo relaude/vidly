@@ -77,6 +77,8 @@
     <Build Include="dbo\Tables\Rentals.sql" />
     <Build Include="dbo\Views\ViewMovies.sql" />
     <Build Include="dbo\Views\ViewCustomers.sql" />
+    <Build Include="dbo\Views\ViewRentals.sql" />
+    <Build Include="dbo\Views\ViewCustomerRentals.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="Vidly.SQL.refactorlog" />

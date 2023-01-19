@@ -23,6 +23,8 @@ namespace Vidly.Web.Repositories
 
         public DbSet<ViewMovie> ViewMovies { get; set; }
         public DbSet<ViewCustomer> ViewCustomers { get; set; }
+        public DbSet<ViewRental> ViewRentals { get; set; }
+        public DbSet<ViewCustomerRental> ViewCustomerRentals { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -129,6 +131,8 @@ namespace Vidly.Web.Repositories
             //VIEWS
             modelBuilder.Entity<ViewMovie>().ToTable("ViewMovies");
             modelBuilder.Entity<ViewCustomer>().ToTable("ViewCustomers");
+            modelBuilder.Entity<ViewRental>().ToTable("ViewRentals");
+            modelBuilder.Entity<ViewCustomerRental>().ToTable("ViewCustomerRentals");
         }
     }
 }

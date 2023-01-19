@@ -20,10 +20,9 @@ namespace Vidly.Web.Api
         }
 
         [HttpGet]
-        public async Task<IEnumerable<ViewMovie>> GetMovies()
+        public async Task<IEnumerable<ViewMovie>> GetMovies(string query = null)
         {
-            var result = await _movieRepository.GetViewMovies();
-            return result.OrderBy(i=>i.Movie);
+            return await _movieRepository.GetViewMovies(query);
         }
 
         [HttpGet]

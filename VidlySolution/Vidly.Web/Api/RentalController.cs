@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Vidly.Web.Dtos;
+using Vidly.Web.Models;
 using Vidly.Web.Repositories;
 
 namespace Vidly.Web.Api
@@ -13,15 +14,18 @@ namespace Vidly.Web.Api
     public class RentalController : ApiController
     {
         private readonly RentalRepository _rentalRepository;
+        private readonly CustomerRentalRepository _customerRentalRepository;
         public RentalController()
         {
             _rentalRepository = new RentalRepository(new VidlyDBContext());
+            _customerRentalRepository= new CustomerRentalRepository(new VidlyDBContext());
         }
 
         [HttpGet]
-        public async Task<IEnumerable<RentalDto>> GetRentals()
+        public async Task<IEnumerable<ViewRental>> GetRentals()
         {
-            return await _rentalRepository.GetListAsync();
+            var result = await _rentalRepository.GetViewRentas();
+            return result.OrderByDescending(i => i.Pending).OrderBy(i=>i.Customer).ToList();
         }
 
         [HttpGet]
@@ -36,14 +40,18 @@ namespace Vidly.Web.Api
         }
 
         [HttpPost]
-        public async Task<IHttpActionResult> CreateRental(RentalDto dto)
+        public async Task<IHttpActionResult> CreateRental(AddCustomerRentalDto dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest();
 
-            var result = await _rentalRepository.CreateAsync(dto);
+            RentalDto rentalDto = new RentalDto { Customer_Id = dto.CustomerId };
+            var result = await _rentalRepository.CreateAsync(rentalDto);
 
-            return Created(new Uri($"{Request.RequestUri}/getrental/{dto.Id}"), dto);
+            dto.RentalId = result.Id;
+            await _customerRentalRepository.CreateCustomerRentals(dto);
+
+            return Created(new Uri($"{Request.RequestUri}/getrental/{rentalDto.Id}"), rentalDto);
         }
 
         [HttpPut]

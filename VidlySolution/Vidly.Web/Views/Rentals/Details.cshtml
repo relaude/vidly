@@ -1,0 +1,81 @@
+﻿@model Vidly.Web.Models.ViewRental
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>@Model.Customer</h2>
+<p>Total Movies Rented : @Model.Rented</p>
+<p>Total Movies Pending for Return : @Model.Pending</p>
+
+<hr />
+<table id="rentals" class="table">
+    <thead>
+        <tr>
+            <th>Movie</th>
+            <th>Fee</th>
+            <th>Rented</th>
+            <th>Returned</th>
+            <th></th>
+        </tr>
+    </thead>
+</table>
+<input type="hidden" value="@Model.Id" id="rental-id" />
+
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            //Table
+            var url = "/api/customerrental/" + $("#rental-id").val();
+            
+            var dataTable = $('#rentals').DataTable({
+                ajax: {
+                    url: url,
+                    dataSrc: ""
+                },
+                columns: [
+                    { data: "movie" },
+                    { data: "rentFee" },
+                    { data: "dateRented" },
+                    { data: "dateReturned" },
+                    {
+                        data: "id",
+                        render: function (data) {
+                            return "<button class='btn-link js-edit' data-rental-id=" + data + ">Edit Return</button>";
+                        }
+                    }
+                ]
+            });
+
+            $("#rentals").on("click", ".js-edit", function () {
+                var button = $(this);
+                var rowData = dataTable.row(button.parents("tr")).data();
+
+                bootbox.prompt({
+                    title: "Update Date Returned",
+                    inputType: 'date',
+                    value: rowData.dateReturned,
+                    callback: function (result) {
+                        var dto = { Id: rowData.id, DateReturned: result }
+                        if (result) {
+                            rowData.name = result;
+                            $.ajax({
+                                url: "/api/customerrental/",
+                                method: "PUT",
+                                headers: { "Content-Type": "application/json" },
+                                data: JSON.stringify(dto),
+                                success: function (response) {
+                                    dataTable.ajax.reload();
+                                }
+                            });
+                        }
+
+                    }
+                });
+
+            });
+        });
+    </script>
+}

@@ -11,7 +11,7 @@ namespace Vidly.Web.Dtos
         public int Id { get; set; }
 
         [Required]
-        public int Customer_Id { get; set; }
+        public int Rental_Id { get; set; }
 
         [Required]
         public int Movie_Id { get; set; }

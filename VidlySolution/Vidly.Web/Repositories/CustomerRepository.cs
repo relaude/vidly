@@ -17,9 +17,16 @@ namespace Vidly.Web.Repositories
             _db = context;
         }
 
-        public async Task<IEnumerable<ViewCustomer>> GetViewCustomers()
+        public async Task<IEnumerable<ViewCustomer>> GetViewCustomers(string query = null)
         {
-            return await _db.ViewCustomers.ToListAsync();
+            if (!string.IsNullOrEmpty(query))
+            { 
+                return await _db.ViewCustomers
+                    .Where(i=>i.DisplayName.Contains(query))
+                    .ToListAsync();
+            }
+            
+            return await _db.ViewCustomers.OrderBy(i=>i.DisplayName).ToListAsync();
         }
     }
 }

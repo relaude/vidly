@@ -19,9 +19,16 @@ namespace Vidly.Web.Repositories
             _db = context;
         }
 
-        public async Task<IEnumerable<ViewMovie>> GetViewMovies()
+        public async Task<IEnumerable<ViewMovie>> GetViewMovies(string query = null)
         {
-            return await _db.ViewMovies.ToListAsync();
+            if (!string.IsNullOrWhiteSpace(query))
+            {
+                return await _db.ViewMovies
+                    .Where(i=>i.Movie.Contains(query))
+                    .ToListAsync();
+            }
+
+            return await _db.ViewMovies.OrderBy(i => i.Movie).ToListAsync();
         }
     }
 }

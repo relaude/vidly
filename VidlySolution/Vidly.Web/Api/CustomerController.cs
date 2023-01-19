@@ -20,10 +20,9 @@ namespace Vidly.Web.Api
         }
 
         [HttpGet]
-        public async Task<IEnumerable<ViewCustomer>> GetCustomers()
+        public async Task<IEnumerable<ViewCustomer>> GetCustomers(string query=null)
         {
-            var result = await _customerRepository.GetViewCustomers();
-            return result.OrderBy(i => i.LastName).ToList();
+            return await _customerRepository.GetViewCustomers(query);
         }
 
         [HttpGet]

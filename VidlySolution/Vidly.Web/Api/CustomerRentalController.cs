@@ -11,10 +11,10 @@ using Vidly.Web.Repositories;
 
 namespace Vidly.Web.Api
 {
-    public class CustomerRentaController : ApiController
+    public class CustomerRentalController : ApiController
     {
         private readonly CustomerRentalRepository _customerRentalRepository;
-        public CustomerRentaController()
+        public CustomerRentalController()
         {
             _customerRentalRepository = new CustomerRentalRepository(new VidlyDBContext());
         }
@@ -26,14 +26,9 @@ namespace Vidly.Web.Api
         }
 
         [HttpGet]
-        public async Task<IHttpActionResult> GetRental(int id)
+        public async Task<IEnumerable<ViewCustomerRental>> GetRentals(int id)
         {
-            var result = await _customerRentalRepository.GetByIdAsync(id);
-
-            if (result == null)
-                return NotFound();
-
-            return Ok(result);
+            return await _customerRentalRepository.GetViewCustomerRentalsByRentalIdAsync(id);
         }
 
         [HttpPost]
@@ -47,13 +42,24 @@ namespace Vidly.Web.Api
             return Created(new Uri($"{Request.RequestUri}/getrental/{dto.Id}"), dto);
         }
 
+        //[HttpPut]
+        //public async Task<IHttpActionResult> UpdateRental(CustomerRentalDto dto)
+        //{
+        //    if (!ModelState.IsValid)
+        //        return BadRequest();
+
+        //    await _customerRentalRepository.UpdateAsync(dto, dto.Id);
+
+        //    return Ok();
+        //}
+
         [HttpPut]
-        public async Task<IHttpActionResult> UpdateRental(CustomerRentalDto dto)
+        public async Task<IHttpActionResult> UpdateRental(UpdateDateReturnDto dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest();
 
-            await _customerRentalRepository.UpdateAsync(dto, dto.Id);
+            await _customerRentalRepository.UpdateDateReturned(dto);
 
             return Ok();
         }
