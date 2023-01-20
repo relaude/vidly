@@ -58,7 +58,7 @@
                     inputType: 'date',
                     value: rowData.dateReturned,
                     callback: function (result) {
-                        var dto = { Id: rowData.id, DateReturned: result }
+                        var dto = { Id: rowData.id, DateReturned: result, MovieId: rowData.movieId }
                         if (result) {
                             rowData.name = result;
                             $.ajax({
@@ -67,7 +67,7 @@
                                 headers: { "Content-Type": "application/json" },
                                 data: JSON.stringify(dto),
                                 success: function (response) {
-                                    dataTable.ajax.reload();
+                                    location.reload();
                                 }
                             });
                         }

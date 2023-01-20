@@ -9,6 +9,7 @@ namespace Vidly.Web.Models
     {
         public int Id { get; set; }
         public int RentalId { get; set; }
+        public int MovieId { get; set; }
         public string Customer { get; set; }
         public string Movie { get; set; }
         public decimal RentFee { get; set; }

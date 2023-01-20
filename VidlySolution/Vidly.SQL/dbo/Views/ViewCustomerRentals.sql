@@ -1,6 +1,6 @@
 ﻿CREATE VIEW [dbo].[ViewCustomerRentals]
 AS
-select CR.Id,R.Id RentalId
+select CR.Id,R.Id RentalId, CR.Movie_Id MovieId
 ,(C.LastName +', '+ C.FirstName) Customer
 ,M.Name Movie
 ,CR.RentFee

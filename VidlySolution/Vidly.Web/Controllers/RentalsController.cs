@@ -8,6 +8,7 @@ using Vidly.Web.Repositories;
 
 namespace Vidly.Web.Controllers
 {
+    [Authorize]
     public class RentalsController : Controller
     {
         private readonly VidlyDBContext _db;

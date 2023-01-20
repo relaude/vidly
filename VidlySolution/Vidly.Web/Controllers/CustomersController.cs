@@ -7,7 +7,7 @@ using Vidly.Web.Repositories;
 
 namespace Vidly.Web.Controllers
 {
-    //[Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     public class CustomersController : Controller
     {
         public CustomersController()

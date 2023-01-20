@@ -58,7 +58,10 @@ namespace Vidly.Web.Repositories
         public async Task UpdateDateReturned(UpdateDateReturnDto dto)
         {
             var rental = await _db.CustomerRentals.FindAsync(dto.Id);
+            var movie = await _db.Movies.FindAsync(dto.MovieId);
+
             rental.DateReturned = dto.DateReturned;
+            movie.Stock = movie.Stock + 1;
 
             await _db.SaveChangesAsync();
         }

@@ -21,5 +21,23 @@ namespace Vidly.Web.Repositories
         {
             return await _db.ViewRentals.ToListAsync();
         }
+
+        public async Task<AddCustomerRentalDto> CreateRentalAsync(AddCustomerRentalDto dto)
+        {
+            RentalDto rentalDto = new RentalDto();
+
+            var rental = _db.Rentals.FirstOrDefault(i => i.Customer_Id == dto.CustomerId);
+            
+            if (rental == null) 
+            { 
+                rentalDto = await CreateAsync(new RentalDto { Id = 0, Customer_Id = dto.CustomerId });
+                dto.RentalId = rentalDto.Id;
+            }
+
+            if (rental != null)
+            { dto.RentalId = rental.Id;  }
+
+            return dto;
+        }
     }
 }

@@ -11,6 +11,7 @@ using Vidly.Web.Repositories;
 
 namespace Vidly.Web.Api
 {
+    [Authorize(Roles = "Admin")]
     public class CustomerController : ApiController
     {
         private readonly CustomerRepository _customerRepository;

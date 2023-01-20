@@ -11,14 +11,17 @@ using Vidly.Web.Repositories;
 
 namespace Vidly.Web.Api
 {
+    [Authorize]
     public class RentalController : ApiController
     {
         private readonly RentalRepository _rentalRepository;
         private readonly CustomerRentalRepository _customerRentalRepository;
+        private readonly MovieRepository _movieRepository;
         public RentalController()
         {
             _rentalRepository = new RentalRepository(new VidlyDBContext());
-            _customerRentalRepository= new CustomerRentalRepository(new VidlyDBContext());
+            _customerRentalRepository = new CustomerRentalRepository(new VidlyDBContext());
+            _movieRepository = new MovieRepository(new VidlyDBContext());
         }
 
         [HttpGet]
@@ -45,13 +48,14 @@ namespace Vidly.Web.Api
             if (!ModelState.IsValid)
                 return BadRequest();
 
-            RentalDto rentalDto = new RentalDto { Customer_Id = dto.CustomerId };
-            var result = await _rentalRepository.CreateAsync(rentalDto);
+            var result = await _rentalRepository.CreateRentalAsync(dto);
 
-            dto.RentalId = result.Id;
+            dto.RentalId = result.RentalId;
             await _customerRentalRepository.CreateCustomerRentals(dto);
 
-            return Created(new Uri($"{Request.RequestUri}/getrental/{rentalDto.Id}"), rentalDto);
+            await _movieRepository.UpdateMovieStock(dto.MovieIds);
+
+            return Created(new Uri($"{Request.RequestUri}/getrental/{dto.RentalId}"), dto);
         }
 
         [HttpPut]

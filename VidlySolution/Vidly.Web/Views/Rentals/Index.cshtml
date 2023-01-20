@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewBag.Title = "Rentals | Vidly";
+    ViewBag.Title = "Rentals";
 }
 
 <h2>Rentals</h2>
@@ -119,10 +119,7 @@
                     {
                         data: "id",
                         render: function (data) {
-                            return "<a href='/rentals/details/"
-                                + data + "'>Details</a> | <button class='btn-link js-edit' data-rental-id="
-                                + data + ">Edit</button> | <button class='btn-link js-delete' data-rental-id="
-                                + data + ">Delete</button>";
+                            return "<a href='/rentals/details/"+ data + "'>Details</a>";
                         }
                     }
                 ]

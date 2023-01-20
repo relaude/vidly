@@ -11,6 +11,8 @@ namespace Vidly.Web.Dtos
         [Required]
         public int Id { get; set; }
         [Required]
+        public int MovieId { get; set; }
+        [Required]
         public DateTime DateReturned { get; set; }
     }
 }

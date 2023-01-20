@@ -11,6 +11,7 @@ using Vidly.Web.Repositories;
 
 namespace Vidly.Web.Api
 {
+    [Authorize(Roles = "Admin")]
     public class MovieController : ApiController
     {
         private readonly MovieRepository _movieRepository;
