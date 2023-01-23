@@ -207,6 +207,7 @@
     <Compile Include="Dtos\MovieDto.cs" />
     <Compile Include="Dtos\RentalDto.cs" />
     <Compile Include="Dtos\UpdateDateReturnDto.cs" />
+    <Compile Include="Dtos\ViewCustomerDto.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -236,6 +237,7 @@
     <Compile Include="Repositories\MovieRepository.cs" />
     <Compile Include="Repositories\RentalRepository.cs" />
     <Compile Include="Repositories\VidlyDBContext.cs" />
+    <Compile Include="Repositories\ViewCustomerRepository.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>

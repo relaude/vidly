@@ -62,6 +62,8 @@
     <Folder Include="dbo\Tables\" />
     <Folder Include="Publish" />
     <Folder Include="dbo\Views" />
+    <Folder Include="PostPublish" />
+    <Folder Include="PrePublish" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Tables\AspNetRoles.sql" />
@@ -79,11 +81,18 @@
     <Build Include="dbo\Views\ViewCustomers.sql" />
     <Build Include="dbo\Views\ViewRentals.sql" />
     <Build Include="dbo\Views\ViewCustomerRentals.sql" />
+    <Build Include="dbo\Tables\SampleEmployee.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="Vidly.SQL.refactorlog" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Publish\Vidly.SQL.publish.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <PostDeploy Include="PostPublish\PostDeploymentScript.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <PreDeploy Include="PrePublish\PreDeploymentScript.sql" />
   </ItemGroup>
 </Project>

@@ -133,6 +133,13 @@ namespace Vidly.Web.Repositories
             modelBuilder.Entity<ViewCustomer>().ToTable("ViewCustomers");
             modelBuilder.Entity<ViewRental>().ToTable("ViewRentals");
             modelBuilder.Entity<ViewCustomerRental>().ToTable("ViewCustomerRentals");
+
+            /* map a property in your model to a different column name in the database
+             modelBuilder.Entity<Sample>()
+                .Property(s => s.sampleId)
+                .HasColumnName("oldNameId");
+
+             */
         }
     }
 }

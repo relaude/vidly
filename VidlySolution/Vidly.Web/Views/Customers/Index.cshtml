@@ -5,16 +5,43 @@
 
 <h2>Manage Customers</h2>
 
+<div>
+    <input type="text" id="customer-search" placeholder="search" />
+    <button id="customer-search-btn">Search</button>
+</div>
 <table id="customers" class="table">
     <thead>
         <tr>
             <th>Last Name</th>
             <th>First Name</th>
             <th><a href="/customers/managemembership">Membership</a></th>
-            <th><button class="btn-link" id="customer-add">Add Customer</button></th>
+            <th>
+                <button class="btn-link" id="customer-add">Add Customer</button>
+            </th>
         </tr>
     </thead>
+    <tbody>
+
+    </tbody>
 </table>
+
+<nav aria-label="Page navigation example">
+    <ul class="pagination">
+        <li class="page-item">
+            <a class="page-link" id="page-first">First</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" id="page-previous">Previous</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" id="page-next">Next</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" id="page-last">Last</a>
+        </li>
+    </ul>
+</nav>
+
 
 <!-- Add Modal -->
 <div class="modal fade" id="customer-add-modal" tabindex="-1" role="dialog" aria-hidden="true">
@@ -62,7 +89,7 @@
                 <form>
                     <div class="form-group">
                         <label>Last Name</label>
-                        <input type="hidden" id="customer-edit-id"  />
+                        <input type="hidden" id="customer-edit-id" />
                         <input type="text" class="form-control" id="customer-edit-lastname">
                     </div>
                     <div class="form-group">
@@ -92,6 +119,35 @@
     <script>
         $(document).ready(function () {
 
+            var currentPage = 1;
+            var totalPages = 0;
+            var dataSource = { totalRows: 0, results: [] };
+
+            function populateTable(pageIndex) {
+                var search = $('#customer-search').val();
+                currentPage = pageIndex;
+
+                $.ajax({
+                    url: "/api/customer?pageIndex=" + pageIndex + "&pageSize=10&search=" + search,
+                    method: "GET",
+                    success: function (response) {
+                        dataSource = response;
+                        totalPages = Math.ceil(dataSource.totalRows / 10);
+
+                        var newRow = "";
+                        for (var i = 0; i < dataSource.results.length; i++) {
+                            newRow = newRow + "<tr><td>" + dataSource.results[i].lastName + "</td><td>"
+                                + dataSource.results[i].firstName + "</td><td>"
+                                + dataSource.results[i].membership + "</td><td><button class='btn-link js-edit' data-customer-index="
+                                + i + ">Edit</button> | <button class='btn-link js-delete' data-customer-id="
+                                + dataSource.results[i].id + ">Delete</button></td></tr>";
+                        }
+
+                        $("#customers tbody").html(newRow);
+                    }
+                });
+            }
+
             function populateSelectMembership(list) {
                 var options = "";
                 $.each(list, function (i, item) {
@@ -102,23 +158,7 @@
                 $("#customer-edit-membership").html(options);
             }
 
-            var dataTable = $('#customers').DataTable({
-                ajax: {
-                    url: "/api/customer",
-                    dataSrc: ""
-                },
-                columns: [
-                    { data: "lastName" },
-                    { data: "firstName" },
-                    { data: "membership" },
-                    {
-                        data: "id",
-                        render: function (data) {
-                            return "<button class='btn-link js-edit' data-customer-id=" + data + ">Edit</button> | <button class='btn-link js-delete' data-customer-id=" + data + ">Delete</button>";
-                        }
-                    }
-                ]
-            });
+            populateTable(1);
 
             $.ajax({
                 url: "/api/membership/",
@@ -126,6 +166,40 @@
                 success: function (response) {
                     populateSelectMembership(response)
                 }
+            });
+
+            //search
+            $("#customer-search-btn").on("click", function () {
+                populateTable(1);
+            });
+
+            //paging
+            $("#page-first").on("click", function () {
+                populateTable(1);
+            });
+
+            $("#page-previous").on("click", function () {
+                if (currentPage == 1) {
+                    populateTable(1);
+                }
+                else {
+                    currentPage = currentPage - 1;
+                    populateTable(currentPage);
+                }
+            });
+
+            $("#page-next").on("click", function () {
+                if (currentPage == totalPages) {
+                    populateTable(totalPages);
+                }
+                else {
+                    currentPage = currentPage + 1;
+                    populateTable(currentPage);
+                }
+            });
+
+            $("#page-last").on("click", function () {
+                populateTable(totalPages);
             });
 
             //Add
@@ -149,15 +223,15 @@
                     data: JSON.stringify(newCustomer),
                     success: function (response) {
                         $("#customer-add-modal").modal('toggle');
-                        dataTable.ajax.reload();
+                        populateTable(1);
                     }
                 });
             });
 
             //Edit
             $("#customers").on("click", ".js-edit", function () {
-                var button = $(this);
-                var rowData = dataTable.row(button.parents("tr")).data();
+                var index = $(this).attr("data-customer-index")
+                var rowData = dataSource.results[index];
 
                 $("#customer-edit-id").val(rowData.id);
                 $("#customer-edit-firstname").val(rowData.firstName);
@@ -184,7 +258,7 @@
                     data: JSON.stringify(newCustomer),
                     success: function (response) {
                         $("#customer-edit-modal").modal('toggle');
-                        dataTable.ajax.reload();
+                        populateTable(1);
                     }
                 });
             });
@@ -199,7 +273,7 @@
                             url: "/api/customer/" + button.attr("data-customer-id"),
                             method: "DELETE",
                             success: function () {
-                                dataTable.row(button.parents("tr")).remove().draw();
+                                populateTable(1);
                             }
                         });
                     }

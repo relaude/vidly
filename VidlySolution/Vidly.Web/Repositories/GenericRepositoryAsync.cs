@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
+using System.Web.Http.Results;
 
 namespace Vidly.Web.Repositories
 {
@@ -49,6 +52,37 @@ namespace Vidly.Web.Repositories
             Mapper.Map(dto, entity);
 
             await Context.SaveChangesAsync();
+        }
+
+        public IEnumerable<TEntity> Paginated(
+            int pageIndex, int pageSize,
+            Expression<Func<TEntity, string>> orderby,
+            out int totalrows)
+        {
+            var query = Context.Set<TEntity>();
+            totalrows = query.Count();
+
+            return query
+                .OrderBy(orderby)
+                .Skip((pageIndex - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+        }
+
+        public IEnumerable<TEntity> Paginated(
+            int pageIndex, int pageSize,
+            Expression<Func<TEntity, bool>> where,
+            Expression<Func<TEntity, string>> orderby, 
+            out int totalrows)
+        {
+            var query = Context.Set<TEntity>().Where(where);
+            totalrows = query.Count();
+
+            return query
+                .OrderBy(orderby)
+                .Skip((pageIndex - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
         }
     }
 }
