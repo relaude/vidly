@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing.Printing;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -12,7 +13,7 @@ using Vidly.Web.Repositories;
 
 namespace Vidly.Web.Api
 {
-    [Authorize]
+    //[Authorize]
     public class CustomerController : ApiController
     {
         private readonly CustomerRepository _customerRepository;
@@ -56,6 +57,25 @@ namespace Vidly.Web.Api
         public async Task<IEnumerable<ViewCustomer>> GetCustomers(string query=null)
         {
             return await _customerRepository.GetViewCustomers(query);
+        }
+
+        [HttpGet]
+        public async Task<ApiGetResultsDto> GetCustomers(int page, int limit)
+        {
+            var paginatedResults = new PaginatedViewCustomerDto();
+            var apiResults = new ApiGetResultsDto();
+            int totalrows = 0;
+
+            var result = await Task.Run(() => _viewCustomerRepository.Paginated(page, limit,
+                    i => i.DisplayName, out totalrows));
+
+            paginatedResults.TotalRows = totalrows;
+            paginatedResults.Results = result;
+
+            apiResults.Results = totalrows;
+            apiResults.Items = paginatedResults.Results;
+
+            return apiResults;
         }
 
         [HttpGet]
