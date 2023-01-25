@@ -60,17 +60,32 @@ namespace Vidly.Web.Api
         }
 
         [HttpGet]
-        public async Task<ApiGetResultsDto> GetCustomers(int page, int limit)
+        public async Task<ApiGetResultsDto> GetCustomers(int page, int limit, string search = null)
         {
             var paginatedResults = new PaginatedViewCustomerDto();
             var apiResults = new ApiGetResultsDto();
             int totalrows = 0;
 
-            var result = await Task.Run(() => _viewCustomerRepository.Paginated(page, limit,
+            if (string.IsNullOrEmpty(search))
+            {
+                var result = await Task.Run(() => _viewCustomerRepository.Paginated(page, limit,
                     i => i.DisplayName, out totalrows));
 
-            paginatedResults.TotalRows = totalrows;
-            paginatedResults.Results = result;
+                paginatedResults.TotalRows = totalrows;
+                paginatedResults.Results = result;
+            }
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                var result = await Task.Run(() => _viewCustomerRepository.Paginated(page, limit,
+                    i => i.DisplayName.Contains(search),
+                    i => i.DisplayName,
+                    out totalrows));
+
+                paginatedResults.TotalRows = totalrows;
+                paginatedResults.Results = result;
+            }
+
 
             apiResults.Results = totalrows;
             apiResults.Items = paginatedResults.Results;
