@@ -123,7 +123,26 @@
                                 buttons: [{
                                     text: 'Submit',
                                     handler: function () {
-                                        // submit the form
+
+                                        var newCustomer = {
+                                            FirstName: Ext.getCmp('customer-add-firstname').getValue(),
+                                            LastName: Ext.getCmp('customer-add-lastname').getValue(),
+                                            DateOfBirth: Ext.getCmp('customer-add-dateofbirth').getValue(),
+                                            Membership_Id: Ext.getCmp('customer-add-membership').getValue()
+                                        };
+
+                                        console.log(newCustomer);
+
+                                        Ext.Ajax.request({
+                                            url: '/api/customer/',
+                                            method: 'POST',
+                                            headers: { "Content-Type": "application/json" },
+                                            jsonData: newCustomer,
+                                            success: function (response) {
+                                                win.hide();
+                                                gridStore.load();
+                                            }
+                                        });
                                     }
                                 }]
                             });
