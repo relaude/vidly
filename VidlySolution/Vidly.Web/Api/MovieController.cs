@@ -11,7 +11,7 @@ using Vidly.Web.Repositories;
 
 namespace Vidly.Web.Api
 {
-    //[Authorize(Roles = "Admin")]
+    
     public class MovieController : ApiController
     {
         private readonly MovieRepository _movieRepository;
@@ -20,12 +20,14 @@ namespace Vidly.Web.Api
             _movieRepository = new MovieRepository(new VidlyDBContext());
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IEnumerable<ViewMovie>> GetMovies(string query = null)
         {
             return await _movieRepository.GetViewMovies(query);
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IHttpActionResult> GetMovie(int id)
         {
@@ -37,6 +39,7 @@ namespace Vidly.Web.Api
             return Ok(result);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IHttpActionResult> CreateMovie(MovieDto dto)
         {
@@ -48,6 +51,7 @@ namespace Vidly.Web.Api
             return Created(new Uri($"{Request.RequestUri}/getmovie/{dto.Id}"), dto);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut]
         public async Task<IHttpActionResult> UpdateMovie(MovieDto dto)
         {
@@ -59,6 +63,7 @@ namespace Vidly.Web.Api
             return Ok();
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete]
         public async Task<IHttpActionResult> DeleteMovie(int id)
         {

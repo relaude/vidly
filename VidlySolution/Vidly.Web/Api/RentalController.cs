@@ -11,7 +11,7 @@ using Vidly.Web.Repositories;
 
 namespace Vidly.Web.Api
 {
-    //[Authorize]
+    [Authorize]
     public class RentalController : ApiController
     {
         private readonly RentalRepository _rentalRepository;

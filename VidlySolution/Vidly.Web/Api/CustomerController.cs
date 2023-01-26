@@ -13,7 +13,6 @@ using Vidly.Web.Repositories;
 
 namespace Vidly.Web.Api
 {
-    //[Authorize]
     public class CustomerController : ApiController
     {
         private readonly CustomerRepository _customerRepository;
@@ -24,6 +23,7 @@ namespace Vidly.Web.Api
             _viewCustomerRepository= new ViewCustomerRepository(new VidlyDBContext());
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<PaginatedViewCustomerDto> PaginatedCustomers(int pageIndex, int pageSize, string search = null)
         {
@@ -53,12 +53,14 @@ namespace Vidly.Web.Api
             return paginatedResults;
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IEnumerable<ViewCustomer>> GetCustomers(string query=null)
         {
             return await _customerRepository.GetViewCustomers(query);
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<ApiGetResultsDto> GetCustomers(int page, int limit, string search = null)
         {
@@ -93,6 +95,7 @@ namespace Vidly.Web.Api
             return apiResults;
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IHttpActionResult> GetCustomer(int id)
         {
@@ -104,6 +107,7 @@ namespace Vidly.Web.Api
             return Ok(result);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IHttpActionResult> CreateCustomer(CustomerDto dto)
         {
@@ -115,6 +119,7 @@ namespace Vidly.Web.Api
             return Created(new Uri($"{Request.RequestUri}/getcustomer/{dto.Id}"), dto);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut]
         public async Task<IHttpActionResult> UpdateCustomer(CustomerDto dto)
         {
@@ -126,6 +131,7 @@ namespace Vidly.Web.Api
             return Ok();
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete]
         public async Task<IHttpActionResult> DeleteCustomer(int id)
         {

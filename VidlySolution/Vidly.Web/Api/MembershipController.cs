@@ -10,7 +10,7 @@ using Vidly.Web.Repositories;
 
 namespace Vidly.Web.Api
 {
-    //[Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     public class MembershipController : ApiController
     {
         private readonly MembershipRepository _membershipRepository;

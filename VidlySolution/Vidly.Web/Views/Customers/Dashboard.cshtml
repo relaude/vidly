@@ -56,24 +56,6 @@
             }
         });
 
-        var actionColumn = {
-            xtype: 'actioncolumn',
-            text: 'Actions',
-            items: [{
-                xtype: 'button',
-                text: 'Edit',
-                handler: function (grid, rowIndex, colIndex) {
-                    // handle edit button click here
-                }
-            }, {
-                xtype: 'button',
-                text: 'Edit',
-                handler: function (grid, rowIndex, colIndex) {
-                    // handle delete button click here
-                }
-            }]
-        };
-
         //Grid
         Ext.create('Ext.grid.Panel', {
             id: 'gridId',
@@ -95,7 +77,72 @@
                     icon: '/content/icons8-update-50.png',
                     tooltip: 'Update Customer',
                     handler: function (grid, rowIndex, colIndex) {
-                        
+                        // Edit start
+                        var record = gridStore.getAt(rowIndex);
+
+                        var formEdit = Ext.create('Ext.form.Panel', {
+                            items: [{
+                                id: 'customer-edit-lastname',
+                                xtype: 'textfield',
+                                value: record.data.lastName,
+                                fieldLabel: 'Last Name',
+                                name: 'lastName'
+                            }, {
+                                id: 'customer-edit-firstname',
+                                xtype: 'textfield',
+                                value: record.data.firstName,
+                                fieldLabel: 'First Name',
+                                name: 'firstName'
+                            }, {
+                                id: 'customer-edit-dateofbirth',
+                                xtype: 'datefield',
+                                value: record.data.dateOfBirth,
+                                fieldLabel: 'Birthday',
+                                name: 'dateOfBirth'
+                            }, {
+                                id: 'customer-edit-membership',
+                                xtype: 'combobox',
+                                fieldLabel: 'Membership',
+                                store: membershipStore,
+                                displayField: 'name',
+                                valueField: 'id',
+                                value: record.data.membershipId.toString(),
+                                editable: false
+                            }],
+                            buttons: [{
+                                text: 'Submit',
+                                handler: function () {
+
+                                    var newCustomer = {
+                                        Id: record.id,
+                                        FirstName: Ext.getCmp('customer-edit-firstname').getValue(),
+                                        LastName: Ext.getCmp('customer-edit-lastname').getValue(),
+                                        DateOfBirth: Ext.getCmp('customer-edit-dateofbirth').getValue(),
+                                        Membership_Id: Ext.getCmp('customer-edit-membership').getValue()
+                                    };
+
+                                    Ext.Ajax.request({
+                                        url: '/api/customer/' + record.id,
+                                        method: 'PUT',
+                                        headers: { "Content-Type": "application/json" },
+                                        jsonData: newCustomer,
+                                        success: function (response) {
+                                            win.close();
+                                            gridStore.load();
+                                        }
+                                    });
+                                }
+                            }]
+                        });
+
+                        var win = Ext.create('Ext.window.Window', {
+                            title: record.data.displayName,
+                            modal: true,
+                            items: [formEdit]
+                        });
+
+                        win.show();
+                        // Edit end
                     }
                 },
                 {
@@ -109,11 +156,15 @@
                     handler: function (grid, rowIndex, colIndex) {
                         var record = gridStore.getAt(rowIndex);
 
-                        Ext.Ajax.request({
-                            url: '/api/customer/' + record.id,
-                            method: 'DELETE',
-                            success: function (response) {
-                                gridStore.load();
+                        Ext.MessageBox.confirm('Confirmation', 'Are you sure you want to delete this item?', function (btn) {
+                            if (btn === 'yes') {
+                                Ext.Ajax.request({
+                                    url: '/api/customer/' + record.id,
+                                    method: 'DELETE',
+                                    success: function (response) {
+                                        gridStore.load();
+                                    }
+                                });
                             }
                         });
                     }
@@ -180,8 +231,6 @@
                                             DateOfBirth: Ext.getCmp('customer-add-dateofbirth').getValue(),
                                             Membership_Id: Ext.getCmp('customer-add-membership').getValue()
                                         };
-
-                                        console.log(newCustomer);
 
                                         Ext.Ajax.request({
                                             url: '/api/customer/',
