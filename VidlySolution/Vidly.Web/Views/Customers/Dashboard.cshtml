@@ -56,6 +56,24 @@
             }
         });
 
+        var actionColumn = {
+            xtype: 'actioncolumn',
+            text: 'Actions',
+            items: [{
+                xtype: 'button',
+                text: 'Edit',
+                handler: function (grid, rowIndex, colIndex) {
+                    // handle edit button click here
+                }
+            }, {
+                xtype: 'button',
+                text: 'Edit',
+                handler: function (grid, rowIndex, colIndex) {
+                    // handle delete button click here
+                }
+            }]
+        };
+
         //Grid
         Ext.create('Ext.grid.Panel', {
             id: 'gridId',
@@ -67,7 +85,39 @@
             columns: [
                 { text: 'ID', dataIndex: 'id' },
                 { text: 'Name', dataIndex: 'displayName', flex: 1 },
-                { text: 'Membership', dataIndex: 'membership', flex: 1 }
+                { text: 'Membership', dataIndex: 'membership', flex: 1 },
+                {
+                    xtype: 'actioncolumn',
+                    width: 100,
+                    align: "center",
+                    header: "Update",
+                    id: 'customer-update',
+                    icon: '/content/icons8-update-50.png',
+                    tooltip: 'Update Customer',
+                    handler: function (grid, rowIndex, colIndex) {
+                        
+                    }
+                },
+                {
+                    xtype: 'actioncolumn',
+                    width: 100,
+                    align: "center",
+                    header: "Delete",
+                    id: 'ccustomer-delete',
+                    icon: '/content/icons8-minus-50.png',
+                    tooltip: 'Delete Customer',
+                    handler: function (grid, rowIndex, colIndex) {
+                        var record = gridStore.getAt(rowIndex);
+
+                        Ext.Ajax.request({
+                            url: '/api/customer/' + record.id,
+                            method: 'DELETE',
+                            success: function (response) {
+                                gridStore.load();
+                            }
+                        });
+                    }
+                }
             ],
 
             dockedItems: [{
@@ -139,7 +189,7 @@
                                             headers: { "Content-Type": "application/json" },
                                             jsonData: newCustomer,
                                             success: function (response) {
-                                                win.hide();
+                                                win.close();
                                                 gridStore.load();
                                             }
                                         });
