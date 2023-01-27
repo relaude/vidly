@@ -25,6 +25,9 @@
     Ext.onReady(function () {
         //Stores
         var pageSize = 10;
+        var currentPage = 1;
+        var totalPages = 0;
+        var totalCnt = 0;
 
         var gridStore = Ext.create('Ext.data.Store', {
             model: 'Customers',
@@ -56,6 +59,20 @@
             },
             autoLoad: true
         });
+
+        function searchStore(page) {
+            var search = Ext.getCmp('searchField').getValue();
+
+            gridStore.getProxy().setExtraParams({
+                search: search
+            });
+
+            gridStore.loadPage(page);
+            totalCnt = gridStore.totalCount;
+            totalPages = Math.ceil(totalCnt / 10);
+
+            console.log(page + ' of ' + totalPages + ' | ' + totalCnt);
+        }
 
         //Grid
         Ext.create('Ext.grid.Panel', {
@@ -129,7 +146,7 @@
                                         jsonData: newCustomer,
                                         success: function (response) {
                                             win.close();
-                                            gridStore.load();
+                                            searchStore(1);
                                         }
                                     });
                                 }
@@ -163,7 +180,7 @@
                                     url: '/api/customer/' + record.id,
                                     method: 'DELETE',
                                     success: function (response) {
-                                        gridStore.load();
+                                        searchStore(1);
                                     }
                                 });
                             }
@@ -183,13 +200,7 @@
                         xtype: 'button',
                         text: 'Search',
                         handler: function () {
-                            var search = Ext.getCmp('searchField').getValue();
-
-                            gridStore.load({
-                                params: {
-                                    search: search
-                                }
-                            });
+                            searchStore(1);
                         }
                     },{
                         xtype: 'button',
@@ -240,7 +251,7 @@
                                             jsonData: newCustomer,
                                             success: function (response) {
                                                 win.close();
-                                                gridStore.load();
+                                                searchStore(1);
                                             }
                                         });
                                     }
@@ -259,10 +270,32 @@
             }],
 
             bbar: Ext.create('Ext.PagingToolbar', {
+                id: 'myPagingToolbar',
                 store: gridStore,
-                displayInfo: true
+                displayInfo: true,
+                items: [
+                    {
+                        xtype: 'button',
+                        text: 'Previous',
+                        listeners: {
+                            click: function () {
+                                currentPage = currentPage - 1;
+                                searchStore(currentPage);
+                            }
+                        }
+                    },
+                    {
+                        xtype: 'button',
+                        text: 'Next',
+                        listeners: {
+                            click: function () {
+                                currentPage = currentPage + 1;
+                                searchStore(currentPage);
+                            }
+                        }
+                    }
+                ]
             })
         });
-
     });
 </script>
