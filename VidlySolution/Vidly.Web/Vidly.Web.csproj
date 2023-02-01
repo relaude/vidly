@@ -514,6 +514,24 @@
     <Content Include="Scripts\typeahead.bundle.min.js" />
     <Content Include="Scripts\typeahead.jquery.js" />
     <Content Include="Scripts\typeahead.jquery.min.js" />
+    <Content Include="VidlyApp\app\Application.js" />
+    <Content Include="VidlyApp\app\model\Base.js" />
+    <Content Include="VidlyApp\app\model\Customers.js" />
+    <Content Include="VidlyApp\app\model\Genres.js" />
+    <Content Include="VidlyApp\app\model\Memberships.js" />
+    <Content Include="VidlyApp\app\model\Personnel.js" />
+    <Content Include="VidlyApp\app\model\Rentals.js" />
+    <Content Include="VidlyApp\app\store\Customers.js" />
+    <Content Include="VidlyApp\app\store\Genres.js" />
+    <Content Include="VidlyApp\app\store\Memberships.js" />
+    <Content Include="VidlyApp\app\store\Personnel.js" />
+    <Content Include="VidlyApp\app\store\Rentals.js" />
+    <Content Include="VidlyApp\app\view\main\MainController.js" />
+    <Content Include="VidlyApp\app\view\main\MainModel.js" />
+    <Content Include="VidlyApp\classic\src\view\main\CustomerList.js" />
+    <Content Include="VidlyApp\classic\src\view\main\GenreList.js" />
+    <Content Include="VidlyApp\classic\src\view\main\List.js" />
+    <Content Include="VidlyApp\classic\src\view\main\Main.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -555,6 +573,8 @@
     <Content Include="Views\Customers\ManageMembership.cshtml" />
     <Content Include="Views\Rentals\Details.cshtml" />
     <Content Include="Views\Customers\Dashboard.cshtml" />
+    <Content Include="VidlyApp\classic\src\view\main\Main.scss" />
+    <Content Include="VidlyApp\app\Application.scss" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
