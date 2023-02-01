@@ -1,11 +1,10 @@
-var pageSize = 10;
-
-Ext.define('Vidly.store.Customers', {
+﻿
+Ext.define('Vidly.Customers.CustomerStore', {
     id: 'store.customers',
     extend: 'Ext.data.Store',
-    alias: 'store.customers',
-    model: 'Vidly.model.Customers',
-    pageSize: pageSize,
+    alias: 'store.customerstore',
+    model: 'Vidly.Customers.CustomerModel',
+    pageSize: 10,
     proxy: {
         type: 'ajax',
         url: '/api/customer',
@@ -18,6 +17,6 @@ Ext.define('Vidly.store.Customers', {
             totalProperty: 'results'
         }
     },
-    autoLoad: {start: 0, limit: pageSize}
+    autoLoad: { start: 0, limit: 10 }
 });
 
