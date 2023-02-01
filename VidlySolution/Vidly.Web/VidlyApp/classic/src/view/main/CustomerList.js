@@ -194,9 +194,12 @@ Ext.define('Vidly.view.main.CustomerList', {
             id: 'customer-delete',
             icon: '/content/icons8-minus-50.png',
             tooltip: 'Delete Customer',
+
             handler: function(grid, rowIndex, colIndex){
                 deleteCustomer(rowIndex);
             }
+
+            //handler: '{deleteRow}'
         }
     ],
     

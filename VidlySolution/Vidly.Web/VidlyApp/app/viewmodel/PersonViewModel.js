@@ -2,7 +2,8 @@
     extend: 'Ext.app.ViewModel',
     alias: 'viewmodel.personviewmodel',
     data: {
-        selectedPerson: null
+        selectedPerson: null,
+        count: 0
     },
     stores: {
         personStore: {

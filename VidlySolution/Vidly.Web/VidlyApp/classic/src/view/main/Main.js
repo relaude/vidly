@@ -15,16 +15,17 @@ Ext.define('Vidly.view.main.Main', {
 
         'Vidly.view.main.MainController',
         'Vidly.view.main.MainModel',
+
+        'Vidly.view.main.PersonMain',
         
         'Vidly.view.main.List',
         'Vidly.view.main.MovieList',
-        'Vidly.view.main.CustomerList',
-        'Vidly.view.main.PersonView'
+        'Vidly.view.main.CustomerList'
+        
     ],
 
     controller: 'main',
-    //viewModel: 'main',
-    viewModel: 'personviewmodel',
+    viewModel: 'main',
 
     ui: 'navigation',
 
@@ -91,7 +92,8 @@ Ext.define('Vidly.view.main.Main', {
         title: 'Customers',
         iconCls: 'fa-users',
         items: [{
-            xtype: 'customerlist'
+            xtype: 'customerlist',
+            bind: '{deleteRow}'
         }]
     },
     {
@@ -104,12 +106,7 @@ Ext.define('Vidly.view.main.Main', {
     {
         title: 'Person',
         items: [{
-            xtype: 'personview',
-            bind: { selection: '{selectedPerson}' }
-        }, {
-            xtype: 'displayfield',
-            fieldLabel: 'Full Name',
-            bind: '{fullName}'
+            xtype: 'personmainview'
         }]
     }]
 });
