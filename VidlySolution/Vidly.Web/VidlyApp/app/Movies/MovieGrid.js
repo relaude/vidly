@@ -19,7 +19,7 @@
             id: 'movie-update',
             icon: '/content/icons8-update-50.png',
             tooltip: 'Update Movie',
-            handler: 'onUpdateItemClick'
+            handler: 'onUpdateItemClickMovie'
         },
         {
             xtype: 'actioncolumn',
@@ -29,7 +29,7 @@
             id: 'movie-delete',
             icon: '/content/icons8-minus-50.png',
             tooltip: 'Delete Movie',
-            handler: 'onDeleteItemClick'
+            handler: 'onDeleteItemClickMovie'
         }
     ],
 
@@ -45,13 +45,13 @@
             xtype: 'button',
             text: 'Search',
             listeners: {
-                click: 'onClickButtonSearch'
+                click: 'onClickButtonSearchMovie'
             }
         }, {
             xtype: 'button',
             text: 'Add',
             listeners: {
-                click: 'onClickAddButton'
+                click: 'onClickAddButtonMovie'
             }
         }],
     }],

@@ -29,7 +29,7 @@
     buttons: [{
         text: 'Update',
         listeners: {
-            click: 'onClickFormUpdate'
+            click: 'onClickFormUpdateMovie'
         }
     }]
 });

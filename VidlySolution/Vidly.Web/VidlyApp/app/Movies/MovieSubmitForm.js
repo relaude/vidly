@@ -33,7 +33,7 @@
     buttons: [{
         text: 'Submit',
         listeners: {
-            click: 'onClickFormSubmit'
+            click: 'onClickFormSubmitMovie'
         }
     }]
 });

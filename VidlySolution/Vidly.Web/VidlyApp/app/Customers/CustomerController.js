@@ -3,11 +3,11 @@
 
     alias: 'controller.customercontroller',
 
-    onClickButtonSearch: function () {
-        refreshGridStore();
+    onClickButtonSearchCustomer: function () {
+        refreshGridStoreCustomer();
     },
 
-    onClickAddButton: function () {
+    onClickAddButtonCustomer: function () {
         var win = Ext.create('Ext.window.Window', {
             id: 'modal-add-customer',
             title: 'New Customer',
@@ -20,14 +20,14 @@
         win.show();
     },
 
-    onClickFormSubmit: function () {
+    onClickFormSubmitCustomer: function () {
         var viewModel = this.getViewModel();
         var customer = viewModel.get('customer');
 
         transactCustomer(customer, '/api/customer', 'POST', 'modal-add-customer');
     },
 
-    onClickFormUpdate: function () {
+    onClickFormUpdateCustomer: function () {
         var modal = Ext.getCmp('modal-edit-customer');
         var selectedCustomer = modal.viewModel.data.selectedCustomer;
         
@@ -42,7 +42,7 @@
         transactCustomer(customer, '/api/customer/' + customer.Id, 'PUT', 'modal-edit-customer');
     },
 
-    onUpdateItemClick: function (view, rowIndex, colIndex, item, e, record) {
+    onUpdateItemClickCustomer: function (view, rowIndex, colIndex, item, e, record) {
         var selectedCustomer = record.data;
         selectedCustomer.membershipId = record.data.membershipId.toString();
 
@@ -64,7 +64,7 @@
         win.viewModel.set('selectedCustomer', selectedCustomer);
     },
 
-    onDeleteItemClick: function (view, rowIndex, colIndex, item, e, record) {
+    onDeleteItemClickCustomer: function (view, rowIndex, colIndex, item, e, record) {
         Ext.MessageBox.confirm('Confirm', 'Are you sure you want to delete this item?', function (btn) {
             if (btn === 'yes') {
                 var customer = record.data;
@@ -76,7 +76,7 @@
 
 });
 
-function refreshGridStore() {
+function refreshGridStoreCustomer() {
     var grid = Ext.getCmp('grid-customers');
     var search = grid.up().viewModel.data.search;
     
@@ -94,7 +94,7 @@ function transactCustomer(customer, url, method, modalId) {
         headers: { "Content-Type": "application/json" },
         jsonData: customer,
         success: function (response) {
-            refreshGridStore();
+            refreshGridStoreCustomer();
 
             if (modalId) {
                 var modal = Ext.getCmp(modalId);

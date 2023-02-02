@@ -20,7 +20,7 @@
             header: "Update",
             icon: '/content/icons8-update-50.png',
             tooltip: 'Update',
-            handler: 'onUpdateReturnDateClick'
+            handler: 'onUpdateReturnDateClickRental'
         }
     ]
 });

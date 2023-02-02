@@ -20,7 +20,7 @@
         xtype: 'button',
         text: 'Add Movie',
         listeners: {
-            click: 'onClickAddMovie'
+            click: 'onClickAddMovieRental'
     }
     }, {
         xtype: 'container',
@@ -33,7 +33,7 @@
     buttons: [{
         text: 'Submit',
         listeners: {
-            click: 'onClickFormSubmit'
+            click: 'onClickFormSubmitRental'
         }
     }]
 });

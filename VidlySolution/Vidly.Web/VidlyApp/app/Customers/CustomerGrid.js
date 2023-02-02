@@ -17,7 +17,7 @@
             id: 'customer-update',
             icon: '/content/icons8-update-50.png',
             tooltip: 'Update Customer',
-            handler: 'onUpdateItemClick'
+            handler: 'onUpdateItemClickCustomer'
         },
         {
             xtype: 'actioncolumn',
@@ -27,7 +27,7 @@
             id: 'customer-delete',
             icon: '/content/icons8-minus-50.png',
             tooltip: 'Delete Customer',
-            handler: 'onDeleteItemClick'
+            handler: 'onDeleteItemClickCustomer'
         }
     ],
 
@@ -43,13 +43,13 @@
             xtype: 'button',
             text: 'Search',
             listeners: {
-                click: 'onClickButtonSearch'
+                click: 'onClickButtonSearchCustomer'
             }
         }, {
             xtype: 'button',
             text: 'Add',
             listeners: {
-                click: 'onClickAddButton'
+                click: 'onClickAddButtonCustomer'
             }
         }],
     }],

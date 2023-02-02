@@ -3,11 +3,11 @@
 
     alias: 'controller.rentalcontroller',
 
-    onClickButtonSearch: function () {
-        refreshGridStore();
+    onClickButtonSearchRental: function () {
+        refreshGridStoreRental();
     },
 
-    onClickAddButton: function () {
+    onClickAddButtonRental: function () {
         var win = Ext.create('Ext.window.Window', {
             id: 'modal-add-rental',
             title: 'New Rental',
@@ -20,7 +20,19 @@
         win.show();
     },
 
-    onClickFormSubmit: function () {
+    onClickAddMovieRental: function () {
+        var viewModel = this.getViewModel();
+        var rental = viewModel.get('rental');
+        var selectedMovieId = viewModel.get('selectedMovieId');
+
+        if (!Ext.Array.contains(rental.MovieIds, selectedMovieId)) {
+            rental.MovieIds.push(selectedMovieId);
+        }
+
+        console.log(rental);
+    },
+
+    onClickFormSubmitRental: function () {
         var viewModel = this.getViewModel();
         var rental = viewModel.get('rental');
 
@@ -28,22 +40,8 @@
         transactRental(rental, '/api/rental', 'POST', 'modal-add-rental');
     },
 
-    onClickFormUpdate: function () {
-        var modal = Ext.getCmp('modal-edit-movie');
-        var selectedMovie = modal.viewModel.data.selectedMovie;
 
-        var movie = {
-            Id: selectedMovie.id,
-            Name: selectedMovie.movie,
-            RentFee: selectedMovie.rentFee,
-            Stock: selectedMovie.stock,
-            Genre_Id: selectedMovie.genreId
-        };
-
-        transactMovie(movie, '/api/movie/' + movie.Id, 'PUT', 'modal-edit-movie');
-    },
-
-    onUpdateItemClick: function (view, rowIndex, colIndex, item, e, record) {
+    onUpdateItemClickRental: function (view, rowIndex, colIndex, item, e, record) {
         var selectedRental = record.data;
 
         var win = Ext.create('Ext.window.Window', {
@@ -72,7 +70,7 @@
         customerRentalStore.loadPage(1);
     },
 
-    onUpdateReturnDateClick: function (view, rowIndex, colIndex, item, e, record) {
+    onUpdateReturnDateClickRental: function (view, rowIndex, colIndex, item, e, record) {
         var selectedCustomerRental = record.data;
 
         var win = Ext.create('Ext.window.Window', {
@@ -122,7 +120,7 @@
 
 });
 
-function refreshGridStore() {
+function refreshGridStoreRental() {
     var grid = Ext.getCmp('grid-rentals');
     var search = grid.up().viewModel.data.search;
 
@@ -140,7 +138,7 @@ function transactRental(rental, url, method, modalId) {
         headers: { "Content-Type": "application/json" },
         jsonData: rental,
         success: function (response) {
-            refreshGridStore();
+            refreshGridStoreRental();
 
             if (modalId) {
                 var modal = Ext.getCmp(modalId);

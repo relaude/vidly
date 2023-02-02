@@ -3,7 +3,6 @@
     extend: 'Ext.grid.Panel',
     xtype: 'rentalgrid',
 
-    //store: { type: 'rentalstore' },
     bind: {
         store: '{rentalStore}'
     },
@@ -24,7 +23,7 @@
             id: 'rental-update',
             icon: '/content/icons8-update-50.png',
             tooltip: 'Details',
-            handler: 'onUpdateItemClick'
+            handler: 'onUpdateItemClickRental'
         }
     ],
 
@@ -40,13 +39,13 @@
             xtype: 'button',
             text: 'Search',
             listeners: {
-                click: 'onClickButtonSearch'
+                click: 'onClickButtonSearchRental'
             }
         }, {
             xtype: 'button',
             text: 'Add',
             listeners: {
-                click: 'onClickAddButton'
+                click: 'onClickAddButtonRental'
             }
         }],
     }],
