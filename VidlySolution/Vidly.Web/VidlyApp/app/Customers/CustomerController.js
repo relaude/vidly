@@ -4,10 +4,7 @@
     alias: 'controller.customercontroller',
 
     onClickButtonSearch: function () {
-        var viewModel = this.getViewModel();
-        var search = viewModel.get('search');
-
-        refreshGridStore(search);
+        refreshGridStore();
     },
 
     onClickAddButton: function () {
@@ -27,37 +24,45 @@
         var viewModel = this.getViewModel();
         var customer = viewModel.get('customer');
 
-        transactCustomer(customer, '/api/customer', 'POST', null, 'modal-add-customer');
+        transactCustomer(customer, '/api/customer', 'POST', 'modal-add-customer');
     },
 
     onClickFormUpdate: function () {
+        var modal = Ext.getCmp('modal-edit-customer');
+        var selectedCustomer = modal.viewModel.data.selectedCustomer;
+        
         var customer = {
-            Id: Ext.getCmp('customer-edit-id').getValue(),
-            FirstName: Ext.getCmp('customer-edit-firstname').getValue(),
-            LastName: Ext.getCmp('customer-edit-lastname').getValue(),
-            DateOfBirth: Ext.getCmp('customer-edit-dateofbirth').getValue(),
-            Membership_Id: Ext.getCmp('customer-edit-membership').getValue()
+            Id: selectedCustomer.id,
+            FirstName: selectedCustomer.firstName,
+            LastName: selectedCustomer.lastName,
+            DateOfBirth: selectedCustomer.dateOfBirth,
+            Membership_Id: selectedCustomer.membershipId
         };
-
-        transactCustomer(customer, '/api/customer/' + customer.id, 'PUT', null, 'modal-edit-customer');
+        
+        transactCustomer(customer, '/api/customer/' + customer.Id, 'PUT', 'modal-edit-customer');
     },
 
     onUpdateItemClick: function (view, rowIndex, colIndex, item, e, record) {
         var selectedCustomer = record.data;
         selectedCustomer.membershipId = record.data.membershipId.toString();
 
+
         var win = Ext.create('Ext.window.Window', {
             id: 'modal-edit-customer',
             title: selectedCustomer.displayName,
             modal: true,
+
+            viewModel: {
+                type: 'customerviewmodel'
+            },
+
             items: [
                 { xtype: 'customer-updateform' }
             ]
         });
 
         win.show();
-
-        fillEditForm(selectedCustomer);
+        win.viewModel.set('selectedCustomer', selectedCustomer);
     },
 
     onDeleteItemClick: function (view, rowIndex, colIndex, item, e, record) {
@@ -65,15 +70,16 @@
             if (btn === 'yes') {
                 var customer = record.data;
 
-                transactCustomer(customer, '/api/customer/' + customer.id, 'DELETE', null, null);
+                transactCustomer(customer, '/api/customer/' + customer.id, 'DELETE', null);
             }
         }, this);
     }
 
 });
 
-function refreshGridStore(search) {
+function refreshGridStore() {
     var grid = Ext.getCmp('grid-customers');
+    var search = grid.up().viewModel.data.search;
     
     grid.store.getProxy().setExtraParams({
         search: search
@@ -82,14 +88,14 @@ function refreshGridStore(search) {
     grid.store.loadPage(1);
 }
 
-function transactCustomer(customer, url, method, search, modalId) {
+function transactCustomer(customer, url, method, modalId) {
     Ext.Ajax.request({
         url: url,
         method: method,
         headers: { "Content-Type": "application/json" },
         jsonData: customer,
         success: function (response) {
-            refreshGridStore(search);
+            refreshGridStore();
 
             if (modalId) {
                 var modal = Ext.getCmp(modalId);
@@ -97,12 +103,4 @@ function transactCustomer(customer, url, method, search, modalId) {
             }
         }
     });
-}
-
-function fillEditForm(record) {
-    Ext.getCmp('customer-edit-id').setValue(record.id);
-    Ext.getCmp('customer-edit-firstname').setValue(record.firstName);
-    Ext.getCmp('customer-edit-lastname').setValue(record.lastName);
-    Ext.getCmp('customer-edit-dateofbirth').setValue(record.dateOfBirth);
-    Ext.getCmp('customer-edit-membership').setValue(record.membershipId);
 }

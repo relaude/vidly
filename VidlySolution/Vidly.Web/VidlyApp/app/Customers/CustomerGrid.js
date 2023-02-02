@@ -35,7 +35,7 @@
         xtype: 'toolbar',
         dock: 'top',
         items: [{
-            id: 'searchField',
+            id: 'grid-customers-search',
             xtype: 'textfield',
             bind: '{search}',
             emptyText: 'search'

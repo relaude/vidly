@@ -2,9 +2,11 @@
     extend: 'Ext.form.Panel',
     xtype: 'customer-submitform',
     controller: 'customercontroller',
+
     viewModel: {
         type: 'customerviewmodel'
     },
+
     items: [{
         xtype: 'textfield',
         fieldLabel: 'First Name',
@@ -16,6 +18,7 @@
     }, {
         xtype: 'datefield',
         fieldLabel: 'Birthday',
+        format: 'Y-m-d',
         bind: '{customer.DateOfBirth}'
 
     }, {
