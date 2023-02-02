@@ -15,9 +15,11 @@ namespace Vidly.Web.Api
     public class MovieController : ApiController
     {
         private readonly MovieRepository _movieRepository;
+        private readonly ViewMovieRepository _viewMovieRepository;
         public MovieController()
         {
             _movieRepository = new MovieRepository(new VidlyDBContext());
+            _viewMovieRepository = new ViewMovieRepository(new VidlyDBContext());
         }
 
         [Authorize]
@@ -25,6 +27,41 @@ namespace Vidly.Web.Api
         public async Task<IEnumerable<ViewMovie>> GetMovies(string query = null)
         {
             return await _movieRepository.GetViewMovies(query);
+        }
+
+        [Authorize]
+        [HttpGet]
+        public async Task<ApiGetResultsDto> GetMovies(int page, int limit, string search = null)
+        {
+            var paginatedResults = new PaginatedViewMovieDto();
+            var apiResults = new ApiGetResultsDto();
+            int totalrows = 0;
+
+            if (string.IsNullOrEmpty(search))
+            {
+                var result = await Task.Run(() => _viewMovieRepository.Paginated(page, limit,
+                    i => i.Movie, out totalrows));
+
+                paginatedResults.TotalRows = totalrows;
+                paginatedResults.Results = result;
+            }
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                var result = await Task.Run(() => _viewMovieRepository.Paginated(page, limit,
+                    i => i.Movie.Contains(search),
+                    i => i.Movie,
+                    out totalrows));
+
+                paginatedResults.TotalRows = totalrows;
+                paginatedResults.Results = result;
+            }
+
+
+            apiResults.Results = totalrows;
+            apiResults.Items = paginatedResults.Results;
+
+            return apiResults;
         }
 
         [Authorize]
@@ -38,6 +75,7 @@ namespace Vidly.Web.Api
 
             return Ok(result);
         }
+
 
         [Authorize(Roles = "Admin")]
         [HttpPost]

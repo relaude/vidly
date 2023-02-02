@@ -17,9 +17,9 @@ Ext.define('Vidly.view.main.Main', {
         'Vidly.view.main.MainModel',
 
         'Vidly.Customers.CustomerMain',
+        'Vidly.Movies.MovieMain',
         
-        'Vidly.view.main.List',
-        'Vidly.view.main.MovieList'
+        'Vidly.view.main.List'
         
     ],
 
@@ -98,7 +98,7 @@ Ext.define('Vidly.view.main.Main', {
         title: 'Movies',
         iconCls: 'fa-columns',
         items: [{
-            xtype: 'movielist'
+            xtype: 'moviemainview'
         }]
     }]
 });

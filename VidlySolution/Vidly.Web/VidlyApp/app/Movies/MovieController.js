@@ -1,7 +1,7 @@
-﻿Ext.define('Vidly.Customers.CustomerController', {
+﻿Ext.define('Vidly.Movies.MovieController', {
     extend: 'Ext.app.ViewController',
 
-    alias: 'controller.customercontroller',
+    alias: 'controller.moviecontroller',
 
     onClickButtonSearch: function () {
         refreshGridStore();
@@ -9,11 +9,11 @@
 
     onClickAddButton: function () {
         var win = Ext.create('Ext.window.Window', {
-            id: 'modal-add-customer',
-            title: 'New Customer',
+            id: 'modal-add-movie',
+            title: 'New Movie',
             modal: true,
             items: [
-                { xtype: 'customer-submitform' }
+                { xtype: 'movie-submitform' }
             ]
         });
 
@@ -22,54 +22,54 @@
 
     onClickFormSubmit: function () {
         var viewModel = this.getViewModel();
-        var customer = viewModel.get('customer');
+        var movie = viewModel.get('movie');
 
-        transactCustomer(customer, '/api/customer', 'POST', 'modal-add-customer');
+        transactMovie(movie, '/api/movie', 'POST', 'modal-add-movie');
     },
 
     onClickFormUpdate: function () {
-        var modal = Ext.getCmp('modal-edit-customer');
-        var selectedCustomer = modal.viewModel.data.selectedCustomer;
-        
-        var customer = {
-            Id: selectedCustomer.id,
-            FirstName: selectedCustomer.firstName,
-            LastName: selectedCustomer.lastName,
-            DateOfBirth: selectedCustomer.dateOfBirth,
-            Membership_Id: selectedCustomer.membershipId
+        var modal = Ext.getCmp('modal-edit-movie');
+        var selectedMovie = modal.viewModel.data.selectedMovie;
+
+        var movie = {
+            Id: selectedMovie.id,
+            Name: selectedMovie.movie,
+            RentFee: selectedMovie.rentFee,
+            Stock: selectedMovie.stock,
+            Genre_Id: selectedMovie.genreId
         };
-        
-        transactCustomer(customer, '/api/customer/' + customer.Id, 'PUT', 'modal-edit-customer');
+
+        transactMovie(movie, '/api/movie/' + movie.Id, 'PUT', 'modal-edit-movie');
     },
 
     onUpdateItemClick: function (view, rowIndex, colIndex, item, e, record) {
-        var selectedCustomer = record.data;
-        selectedCustomer.membershipId = record.data.membershipId.toString();
+        var selectedMovie = record.data;
+        selectedMovie.genreId = record.data.genreId.toString();
 
         var win = Ext.create('Ext.window.Window', {
-            id: 'modal-edit-customer',
-            title: selectedCustomer.displayName,
+            id: 'modal-edit-movie',
+            title: selectedMovie.movie,
             modal: true,
 
             viewModel: {
-                type: 'customerviewmodel'
+                type: 'movieviewmodel'
             },
 
             items: [
-                { xtype: 'customer-updateform' }
+                { xtype: 'movie-updateform' }
             ]
         });
 
         win.show();
-        win.viewModel.set('selectedCustomer', selectedCustomer);
+        win.viewModel.set('selectedMovie', selectedMovie);
     },
 
     onDeleteItemClick: function (view, rowIndex, colIndex, item, e, record) {
         Ext.MessageBox.confirm('Confirm', 'Are you sure you want to delete this item?', function (btn) {
             if (btn === 'yes') {
-                var customer = record.data;
+                var movie = record.data;
 
-                transactCustomer(customer, '/api/customer/' + customer.id, 'DELETE', null);
+                transactMovie(movie, '/api/movie/' + movie.id, 'DELETE', null);
             }
         }, this);
     }
@@ -77,9 +77,9 @@
 });
 
 function refreshGridStore() {
-    var grid = Ext.getCmp('grid-customers');
+    var grid = Ext.getCmp('grid-movies');
     var search = grid.up().viewModel.data.search;
-    
+
     grid.store.getProxy().setExtraParams({
         search: search
     });
@@ -87,12 +87,12 @@ function refreshGridStore() {
     grid.store.loadPage(1);
 }
 
-function transactCustomer(customer, url, method, modalId) {
+function transactMovie(movie, url, method, modalId) {
     Ext.Ajax.request({
         url: url,
         method: method,
         headers: { "Content-Type": "application/json" },
-        jsonData: customer,
+        jsonData: movie,
         success: function (response) {
             refreshGridStore();
 
