@@ -24,12 +24,26 @@
         var viewModel = this.getViewModel();
         var rental = viewModel.get('rental');
         var selectedMovieId = viewModel.get('selectedMovieId');
+        var selectedMovies = viewModel.get('selectedMovies');
+        
+        var combobox = Ext.getCmp('combobox-add-movie');
+        var container = Ext.getCmp('rental-add-movie-list');
+
+        var litag = '';
 
         if (!Ext.Array.contains(rental.MovieIds, selectedMovieId)) {
             rental.MovieIds.push(selectedMovieId);
+            selectedMovies.push(combobox.getDisplayValue());
         }
 
+        for (var i = 0; i < selectedMovies.length; i++) {
+            litag = litag + '<li>' + selectedMovies[i] + '</li>';
+        }
+
+        container.update('<ol>' + litag + '</ol>');
+
         console.log(rental);
+        console.log(selectedMovies);
     },
 
     onClickFormSubmitRental: function () {

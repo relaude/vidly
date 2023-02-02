@@ -23,11 +23,9 @@
             click: 'onClickAddMovieRental'
     }
     }, {
+        id: 'rental-add-movie-list',
         xtype: 'container',
-        tpl: '<ol><tpl for="listData"><li>{text}</li></tpl></ol>',
-        data: {
-            listData: '{listData}'
-        }
+        html: ''
     }],
 
     buttons: [{
