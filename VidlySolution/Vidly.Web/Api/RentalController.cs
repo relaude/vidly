@@ -17,11 +17,13 @@ namespace Vidly.Web.Api
         private readonly RentalRepository _rentalRepository;
         private readonly CustomerRentalRepository _customerRentalRepository;
         private readonly MovieRepository _movieRepository;
+        private readonly ViewRentalRepository _viewRentalRepository;
         public RentalController()
         {
             _rentalRepository = new RentalRepository(new VidlyDBContext());
             _customerRentalRepository = new CustomerRentalRepository(new VidlyDBContext());
             _movieRepository = new MovieRepository(new VidlyDBContext());
+            _viewRentalRepository = new ViewRentalRepository(new VidlyDBContext());
         }
 
         [HttpGet]
@@ -29,6 +31,41 @@ namespace Vidly.Web.Api
         {
             var result = await _rentalRepository.GetViewRentas();
             return result.OrderByDescending(i => i.Pending).OrderBy(i=>i.Customer).ToList();
+        }
+
+        [Authorize]
+        [HttpGet]
+        public async Task<ApiGetResultsDto> GetRentals(int page, int limit, string search = null)
+        {
+            var paginatedResults = new PaginatedViewRentalDto();
+            var apiResults = new ApiGetResultsDto();
+            int totalrows = 0;
+
+            if (string.IsNullOrEmpty(search))
+            {
+                var result = await Task.Run(() => _viewRentalRepository.Paginated(page, limit,
+                    i => i.Customer, out totalrows));
+
+                paginatedResults.TotalRows = totalrows;
+                paginatedResults.Results = result;
+            }
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                var result = await Task.Run(() => _viewRentalRepository.Paginated(page, limit,
+                    i => i.Customer.Contains(search),
+                    i => i.Customer,
+                    out totalrows));
+
+                paginatedResults.TotalRows = totalrows;
+                paginatedResults.Results = result;
+            }
+
+
+            apiResults.Results = totalrows;
+            apiResults.Items = paginatedResults.Results;
+
+            return apiResults;
         }
 
         [HttpGet]

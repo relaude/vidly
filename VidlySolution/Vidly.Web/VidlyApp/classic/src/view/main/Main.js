@@ -16,10 +16,9 @@ Ext.define('Vidly.view.main.Main', {
         'Vidly.view.main.MainController',
         'Vidly.view.main.MainModel',
 
+        'Vidly.Rentals.RentalMain',
         'Vidly.Customers.CustomerMain',
-        'Vidly.Movies.MovieMain',
-        
-        'Vidly.view.main.List'
+        'Vidly.Movies.MovieMain'
         
     ],
 
@@ -84,7 +83,7 @@ Ext.define('Vidly.view.main.Main', {
         iconCls: 'fa-home',
         // The following grid shares a store with the classic version's grid as well!
         items: [{
-            xtype: 'mainlist'
+            xtype: 'rentalmainview'
         }]
     }, 
     {

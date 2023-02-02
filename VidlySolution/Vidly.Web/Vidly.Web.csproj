@@ -216,6 +216,7 @@
     <Compile Include="Dtos\UpdateDateReturnDto.cs" />
     <Compile Include="Dtos\ViewCustomerDto.cs" />
     <Compile Include="Dtos\ViewMovieDto.cs" />
+    <Compile Include="Dtos\ViewRentalDto.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -247,6 +248,7 @@
     <Compile Include="Repositories\VidlyDBContext.cs" />
     <Compile Include="Repositories\ViewCustomerRepository.cs" />
     <Compile Include="Repositories\ViewMovieRepository.cs" />
+    <Compile Include="Repositories\ViewRentalRepository.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -537,7 +539,15 @@
     <Content Include="VidlyApp\app\Movies\MovieMain.js" />
     <Content Include="VidlyApp\app\Movies\MovieModel.js" />
     <Content Include="VidlyApp\app\Movies\MovieStore.js" />
+    <Content Include="VidlyApp\app\Movies\MovieSubmitForm.js" />
+    <Content Include="VidlyApp\app\Movies\MovieUpdateForm.js" />
     <Content Include="VidlyApp\app\Movies\MovieViewModel.js" />
+    <Content Include="VidlyApp\app\Rentals\RentalController.js" />
+    <Content Include="VidlyApp\app\Rentals\RentalGrid.js" />
+    <Content Include="VidlyApp\app\Rentals\RentalModel.js" />
+    <Content Include="VidlyApp\app\Rentals\RentalStore.js" />
+    <Content Include="VidlyApp\app\Rentals\RentalViewModel.js" />
+    <Content Include="VidlyApp\app\Rentals\RentaMain.js" />
     <Content Include="VidlyApp\app\store\Genres.js" />
     <Content Include="VidlyApp\app\store\Memberships.js" />
     <Content Include="VidlyApp\app\store\Movies.js" />

@@ -1,6 +1,5 @@
 ﻿
 Ext.define('Vidly.Customers.CustomerStore', {
-    id: 'store.customers',
     extend: 'Ext.data.Store',
     alias: 'store.customerstore',
     model: 'Vidly.Customers.CustomerModel',

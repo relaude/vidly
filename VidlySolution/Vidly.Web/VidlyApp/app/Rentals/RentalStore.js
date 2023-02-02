@@ -1,12 +1,11 @@
-﻿
-Ext.define('Vidly.Movies.MovieStore', {
+﻿Ext.define('Vidly.Rentals.RentalStore', {
     extend: 'Ext.data.Store',
-    alias: 'store.moviestore',
-    model: 'Vidly.Movies.MovieModel',
+    alias: 'store.rentalstore',
+    model: 'Vidly.Rentals.RentalModel',
     pageSize: 10,
     proxy: {
         type: 'ajax',
-        url: '/api/movie',
+        url: '/api/rental',
         extraParams: {
             search: ''
         },
