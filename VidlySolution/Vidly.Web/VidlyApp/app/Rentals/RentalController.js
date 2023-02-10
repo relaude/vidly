@@ -41,9 +41,6 @@
         }
 
         container.update('<ol>' + litag + '</ol>');
-
-        console.log(rental);
-        console.log(selectedMovies);
     },
 
     onClickFormSubmitRental: function () {

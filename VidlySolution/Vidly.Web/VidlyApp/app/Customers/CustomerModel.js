@@ -2,6 +2,6 @@
     extend: 'Vidly.model.Base',
 
     fields: [
-        'id', 'displayName', 'membership'
+        'id', 'displayName', 'membership', 'firstName', 'lastName', 'dateOfBirth', 'membership_Id'
     ]
 });

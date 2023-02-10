@@ -4,8 +4,7 @@
 
     data: {
         search: '',
-        selectedMovie: null,
-        movie: { Name: '', RentFee: 0, Stock: 0, Genre_Id: '8' }
+        movie: null
     },
 
     stores: {

@@ -31,6 +31,7 @@ namespace Vidly.Web.Api
 
         [Authorize]
         [HttpGet]
+        [Route("api/movie")]
         public async Task<ApiGetResultsDto> GetMovies(int page, int limit, string search = null)
         {
             var paginatedResults = new PaginatedViewMovieDto();
@@ -40,7 +41,7 @@ namespace Vidly.Web.Api
             if (string.IsNullOrEmpty(search))
             {
                 var result = await Task.Run(() => _viewMovieRepository.Paginated(page, limit,
-                    i => i.Movie, out totalrows));
+                    i => i.Name, out totalrows));
 
                 paginatedResults.TotalRows = totalrows;
                 paginatedResults.Results = result;
@@ -49,8 +50,8 @@ namespace Vidly.Web.Api
             if (!string.IsNullOrEmpty(search))
             {
                 var result = await Task.Run(() => _viewMovieRepository.Paginated(page, limit,
-                    i => i.Movie.Contains(search),
-                    i => i.Movie,
+                    i => i.Name.Contains(search),
+                    i => i.Name,
                     out totalrows));
 
                 paginatedResults.TotalRows = totalrows;
@@ -79,6 +80,7 @@ namespace Vidly.Web.Api
 
         [Authorize(Roles = "Admin")]
         [HttpPost]
+        [Route("api/movie")]
         public async Task<IHttpActionResult> CreateMovie(MovieDto dto)
         {
             if (!ModelState.IsValid)
@@ -91,8 +93,10 @@ namespace Vidly.Web.Api
 
         [Authorize(Roles = "Admin")]
         [HttpPut]
-        public async Task<IHttpActionResult> UpdateMovie(MovieDto dto)
+        [Route("api/movie/{id}")]
+        public async Task<IHttpActionResult> UpdateMovie(int id, MovieDto dto)
         {
+            dto.Id= id;
             if (!ModelState.IsValid)
                 return BadRequest();
 
@@ -103,6 +107,7 @@ namespace Vidly.Web.Api
 
         [Authorize(Roles = "Admin")]
         [HttpDelete]
+        [Route("api/movie/{id}")]
         public async Task<IHttpActionResult> DeleteMovie(int id)
         {
             await _movieRepository.DeleteAsync(id);

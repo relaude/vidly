@@ -24,11 +24,11 @@ namespace Vidly.Web.Repositories
             if (!string.IsNullOrWhiteSpace(query))
             {
                 return await _db.ViewMovies
-                    .Where(i=>i.Movie.Contains(query) && i.Stock > 0)
+                    .Where(i=>i.Name.Contains(query) && i.Stock > 0)
                     .ToListAsync();
             }
 
-            return await _db.ViewMovies.OrderBy(i => i.Movie).ToListAsync();
+            return await _db.ViewMovies.OrderBy(i => i.Name).ToListAsync();
         }
 
         public async Task UpdateMovieStock(int[] ids)

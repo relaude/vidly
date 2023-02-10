@@ -9,9 +9,9 @@ namespace Vidly.Web.Dtos
     public class ViewMovieDto
     {
         public int Id { get; set; }
-        public string Movie { get; set; }
+        public string Name { get; set; }
         public string Genre { get; set; }
-        public int GenreId { get; set; }
+        public int Genre_Id { get; set; }
         public decimal RentFee { get; set; }
         public int Stock { get; set; }
     }

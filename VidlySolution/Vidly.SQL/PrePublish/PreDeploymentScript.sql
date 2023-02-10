@@ -14,12 +14,12 @@
 --ALTER TABLE [Memberships]
 --DROP COLUMN Tag
 
-IF OBJECT_ID ('Vidly.dbo.MembershipsBackUp', 'U') IS NOT NULL
-BEGIN
-	DROP TABLE MembershipsBackUp;
-	SELECT * INTO MembershipsBackUp FROM Memberships;
-END
-ELSE
-BEGIN
-	SELECT * INTO MembershipsBackUp FROM Memberships;
-END
+--IF OBJECT_ID ('Vidly.dbo.MembershipsBackUp', 'U') IS NOT NULL
+--BEGIN
+--	DROP TABLE MembershipsBackUp;
+--	SELECT * INTO MembershipsBackUp FROM Memberships;
+--END
+--ELSE
+--BEGIN
+--	SELECT * INTO MembershipsBackUp FROM Memberships;
+--END

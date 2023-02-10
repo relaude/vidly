@@ -10,24 +10,27 @@
     items: [{
         xtype: 'textfield',
         fieldLabel: 'Name',
-        bind: '{movie.Name}'
+        bind: '{movie.name}'
     }, {
         xtype: 'numberfield',
         fieldLabel: 'Rent Fee',
-        bind: '{movie.RentFee}'
+        bind: '{movie.rentFee}'
     }, {
         xtype: 'numberfield',
         fieldLabel: 'Stock',
-        bind: '{movie.Stock}'
+        bind: '{movie.stock}'
 
     }, {
         xtype: 'combobox',
         fieldLabel: 'Genre',
-        bind: '{movie.Genre_Id}',
+        bind: '{movie.genre_Id}',
         store: { type: 'genres' },
         displayField: 'name',
         valueField: 'id',
         editable: false
+    }, {
+        xtype: 'hiddenfield',
+        bind: '{movie.id}'
     }],
 
     buttons: [{

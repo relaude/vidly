@@ -21,34 +21,50 @@
     },
 
     onClickFormSubmitMovie: function () {
+        
         var viewModel = this.getViewModel();
-        var movie = viewModel.get('movie');
+        var movie = viewModel.data.movie;
+        movie.id = '';
+        var gridStore = Ext.getCmp('grid-movies').store;
+        gridStore.add(movie);
 
-        transactMovie(movie, '/api/movie', 'POST', 'modal-add-movie');
+        gridStore.sync({
+            success: function () {
+              
+                var modal = Ext.getCmp('modal-add-movie');
+                modal.close();
+                gridStore.loadPage(1);
+            },
+            failure: function () {
+                Ext.Msg.alert('Error', 'Error updating records!');
+            }
+        });
     },
 
     onClickFormUpdateMovie: function () {
         var modal = Ext.getCmp('modal-edit-movie');
-        var selectedMovie = modal.viewModel.data.selectedMovie;
 
-        var movie = {
-            Id: selectedMovie.id,
-            Name: selectedMovie.movie,
-            RentFee: selectedMovie.rentFee,
-            Stock: selectedMovie.stock,
-            Genre_Id: selectedMovie.genreId
-        };
+        var gridStore = Ext.getCmp('grid-movies').store;
 
-        transactMovie(movie, '/api/movie/' + movie.Id, 'PUT', 'modal-edit-movie');
+        gridStore.sync({
+            success: function () {
+                var modal = Ext.getCmp('modal-edit-movie');
+                modal.close();
+                gridStore.loadPage(1);
+            },
+            failure: function () {
+                Ext.Msg.alert('Error', 'Error updating records!');
+            }
+        });
     },
 
-    onUpdateItemClickMovie: function (view, rowIndex, colIndex, item, e, record) {
-        var selectedMovie = record.data;
-        selectedMovie.genreId = record.data.genreId.toString();
+    onUpdateItemClickMovie: function (grid, rowIndex, colIndex) {
+
+        var rowData = grid.store.getData().items[rowIndex];
 
         var win = Ext.create('Ext.window.Window', {
             id: 'modal-edit-movie',
-            title: selectedMovie.movie,
+            title: 'Update Movie',
             modal: true,
 
             viewModel: {
@@ -60,16 +76,24 @@
             ]
         });
 
+        var viewModel = win.getViewModel();
+        viewModel.set('movie', rowData);
+
         win.show();
-        win.viewModel.set('selectedMovie', selectedMovie);
     },
 
     onDeleteItemClickMovie: function (view, rowIndex, colIndex, item, e, record) {
         Ext.MessageBox.confirm('Confirm', 'Are you sure you want to delete this item?', function (btn) {
             if (btn === 'yes') {
-                var movie = record.data;
 
-                transactMovie(movie, '/api/movie/' + movie.id, 'DELETE', null);
+                var gridStore = Ext.getCmp('grid-movies').store;
+
+                gridStore.proxy.setExtraParams({
+                    id: record.id
+                });
+
+                gridStore.remove(record);
+                gridStore.sync();
             }
         }, this);
     }

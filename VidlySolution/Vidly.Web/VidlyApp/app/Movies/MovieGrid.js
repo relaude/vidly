@@ -7,7 +7,7 @@
 
     columns: [
         { text: 'ID', dataIndex: 'id' },
-        { text: 'Name', dataIndex: 'movie', flex: 1 },
+        { text: 'Name', dataIndex: 'name', flex: 1 },
         { text: 'Genre', dataIndex: 'genre', flex: 1 },
         { text: 'Rent Fee', dataIndex: 'rentFee', flex: 1 },
         { text: 'Stock', dataIndex: 'stock', flex: 1 },
