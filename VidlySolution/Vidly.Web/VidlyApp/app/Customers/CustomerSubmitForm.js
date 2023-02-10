@@ -10,21 +10,21 @@
     items: [{
         xtype: 'textfield',
         fieldLabel: 'First Name',
-        bind: '{customer.FirstName}'
+        bind: '{customer.firstName}'
     }, {
         xtype: 'textfield',
         fieldLabel: 'Last Name',
-        bind: '{customer.LastName}'
+        bind: '{customer.lastName}'
     }, {
         xtype: 'datefield',
         fieldLabel: 'Birthday',
         format: 'Y-m-d',
-        bind: '{customer.DateOfBirth}'
+        bind: '{customer.dateOfBirth}'
 
     }, {
         xtype: 'combobox',
         fieldLabel: 'Membership',
-        bind: '{customer.Membership_Id}',
+        bind: '{customer.membership_Id}',
         store: { type: 'memberships' },
         displayField: 'name',
         valueField: 'id',

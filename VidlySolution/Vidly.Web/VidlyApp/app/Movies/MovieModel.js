@@ -4,9 +4,7 @@
     idProperty: 'id',
 
     fields: [
-        //'id', 'movie', 'genre', 'genre_id', 'rentFee', 'stock'
         { name: 'id', type: 'int', persist: false },
-        //{ name: 'id', type: 'int' },
         { name: 'name', type: 'string' },
         { name: 'genre_Id', type: 'int' },
         { name: 'genre', type: 'string' },

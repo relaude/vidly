@@ -62,6 +62,7 @@ namespace Vidly.Web.Api
 
         [Authorize]
         [HttpGet]
+        [Route("api/customer")]
         public async Task<ApiGetResultsDto> GetCustomers(int page, int limit, string search = null)
         {
             var paginatedResults = new PaginatedViewCustomerDto();
@@ -109,6 +110,7 @@ namespace Vidly.Web.Api
 
         [Authorize(Roles = "Admin")]
         [HttpPost]
+        [Route("api/customer")]
         public async Task<IHttpActionResult> CreateCustomer(CustomerDto dto)
         {
             if (!ModelState.IsValid)
@@ -121,8 +123,10 @@ namespace Vidly.Web.Api
 
         [Authorize(Roles = "Admin")]
         [HttpPut]
-        public async Task<IHttpActionResult> UpdateCustomer(CustomerDto dto)
+        [Route("api/customer/{id}")]
+        public async Task<IHttpActionResult> UpdateCustomer(int id, CustomerDto dto)
         {
+            dto.Id = id;
             if (!ModelState.IsValid)
                 return BadRequest();
 
@@ -133,6 +137,7 @@ namespace Vidly.Web.Api
 
         [Authorize(Roles = "Admin")]
         [HttpDelete]
+        [Route("api/customer/{id}")]
         public async Task<IHttpActionResult> DeleteCustomer(int id)
         {
             await _customerRepository.DeleteAsync(id);

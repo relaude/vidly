@@ -5,15 +5,20 @@ Ext.define('Vidly.Customers.CustomerStore', {
     model: 'Vidly.Customers.CustomerModel',
     pageSize: 10,
     proxy: {
-        type: 'ajax',
+        type: 'rest',
         url: '/api/customer',
         extraParams: {
-            search: ''
+            search: '',
+            id: ''
         },
         reader: {
             type: 'json',
             rootProperty: 'items',
             totalProperty: 'results'
+        },
+        writer: {
+            type: 'json',
+            writeAllFields: true
         }
     },
     autoLoad: { start: 0, limit: 10 }

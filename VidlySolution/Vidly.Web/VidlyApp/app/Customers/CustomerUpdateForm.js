@@ -7,30 +7,30 @@
         id: 'customer-edit-firstname',
         xtype: 'textfield',
         fieldLabel: 'First Name',
-        bind: '{selectedCustomer.firstName}'
+        bind: '{customer.firstName}'
     }, {
         id: 'customer-edit-lastname',
         xtype: 'textfield',
         fieldLabel: 'Last Name',
-        bind: '{selectedCustomer.lastName}'
+        bind: '{customer.lastName}'
         }, {
         id: 'customer-edit-dateofbirth',
         xtype: 'datefield',
         fieldLabel: 'Birthday',
         format: 'Y-m-d',
-        bind: '{selectedCustomer.dateOfBirth}'
+        bind: '{customer.dateOfBirth}'
     }, {
         id: 'customer-edit-membership',
         xtype: 'combobox',
         fieldLabel: 'Membership',
-        bind: '{selectedCustomer.membershipId}',
+        bind: '{customer.membership_Id}',
         store: { type: 'memberships' },
         displayField: 'name',
         valueField: 'id',
         editable: false
     }, {
-        id: 'customer-edit-id',
-        xtype: 'hiddenfield'
+        xtype: 'hiddenfield',
+        bind: '{customer.id}'
     }],
 
     buttons: [{

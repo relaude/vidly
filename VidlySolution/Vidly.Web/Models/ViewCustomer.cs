@@ -12,7 +12,7 @@ namespace Vidly.Web.Models
         public string FirstName { get; set; }
         public string DisplayName { get; set; }
         public string DateOfBirth { get; set; }
-        public int MembershipId { get; set; }
+        public int Membership_Id { get; set; }
         public string Membership { get; set; }
     }
 }

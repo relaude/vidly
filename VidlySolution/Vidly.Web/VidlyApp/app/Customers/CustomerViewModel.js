@@ -4,8 +4,7 @@
 
     data: {
         search: '',
-        selectedCustomer: null,
-        customer: { FirstName: '', LastName: '', DateOfBirth: '', Membership_Id: '5' }
+        customer: null
     },
 
     stores: {
